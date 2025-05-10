@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "string",
+      "description": "The server URL for the online service.",
+      "format": "uri"
+    },
+    "online": {
+      "type": "boolean",
+      "description": "Whether to use the online service."
+    },
+    "api_key": {
+      "type": "string",
+      "description": "The API key for the online service."
+    }
+  },
+  "required": ["server", "online", "api_key"],
+  "description": "Settings for the ot_server.",
+  "additionalProperties": false
+}
+  

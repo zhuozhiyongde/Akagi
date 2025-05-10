@@ -1,0 +1,14 @@
+# Basic
+mjai==0.2.1
+mitmproxy==11.1.2
+loguru==0.7.3
+textual==3.0.0
+requests==2.32.3
+jsonschema==4.23.0
+
+# Majsoul
+protobuf==5.29.3
+
+# PyTorch
+torch==2.5.1
+numpy==2.1.2

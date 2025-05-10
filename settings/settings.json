@@ -1,0 +1,14 @@
+{
+    "mitm": {
+        "type": "majsoul",
+        "host": "127.0.0.1",
+        "port": 7880
+    },
+    "model": "mortal",
+    "theme": "textual-dark",
+    "ot_server": {
+        "server": "http://127.0.0.1:5000",
+        "online": false,
+        "api_key": "your_api_key"
+    }
+}

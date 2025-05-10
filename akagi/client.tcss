@@ -1,0 +1,477 @@
+#top_container {
+    width: 1fr;
+    height: 1fr;    
+}
+
+#recommandation {
+    width: 3fr;
+    height: 1fr;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+}
+
+#content_switcher {
+    width: 2fr;
+    height: 1fr;
+}
+
+#bot_status {
+    width: 1fr;
+    height: 1fr;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+}
+
+#mjai_out_log {
+    width: 1fr;
+    height: 1fr;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+    background: $background;
+/*  overflow-y: hidden; */
+    &:focus {
+        background-tint: $background;
+    }
+}
+
+#mjai_in_log {
+    width: 1fr;
+    height: 1fr;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+    background: $background;
+/*  overflow-y: hidden; */
+    &:focus {
+        background-tint: $background;
+    }
+}
+
+#tehai {
+    width: 1fr;
+    height: auto;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+}
+
+#bottom_container {
+    width: 1fr;
+    height: 7;
+}
+
+#option_container {
+    width: 1fr;
+    height: 7;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+}
+
+#option_container Button {
+    width: 1fr;
+    min-width: 9;
+    height: 5;
+    margin: 0 1;
+}
+
+#best_action {
+    width: 48;
+    height: 7;
+    border: round $accent;
+    border-title-align: left;
+    align: center top;
+    padding: 0;
+}
+
+Consume {
+    width: 24;
+    height: 5;
+    align: center top;
+}
+
+Recommandation {
+    width: 1fr;
+    height: 1fr;
+    align: center middle;
+}
+
+#recommandation_button {
+    width: 1fr;
+    height: 5;
+}
+
+$chi: #00ff80;
+$chi-lighten-1: #3f9;
+$chi-lighten-2: #66ffb3;
+$chi-lighten-3: #9fc;
+$chi-darken-1: #0c6;
+$chi-darken-2: #00994d;
+$chi-darken-3: #063;
+
+Button.Chi {
+    background: $chi;
+    color: $text;
+    border-top: tall $chi-lighten-2;
+    border-bottom: tall $chi-darken-3;
+    min-width: 10;
+}
+
+Button.Chi:hover {
+    background: $chi-darken-2;
+    color: $text;
+    border-top: tall $chi;
+}
+
+Button.Chi.-active {
+    background: $chi;
+    border-bottom: tall $chi-lighten-2;
+    border-top: tall $chi-darken-2;
+}
+
+
+$pon: #007fff;
+$pon-lighten-1: #39f;
+$pon-lighten-2: #66b2ff;
+$pon-lighten-3: #9cf;
+$pon-darken-1: #06c;
+$pon-darken-2: #004c99;
+$pon-darken-3: #036;
+
+Button.Pon {
+    background: $pon;
+    color: $text;
+    border-top: tall $pon-lighten-3;
+    border-bottom: tall $pon-darken-3;
+}
+
+Button.Pon:hover {
+    background: $pon-darken-2;
+    color: $text;
+    border-top: tall $pon;
+}
+
+Button.Pon.-active {
+    background: $pon;
+    border-bottom: tall $pon-lighten-3;
+    border-top: tall $pon-darken-3;
+}
+
+$kan: #9a1cbd;
+$kan-lighten-1: #b92ce0;
+$kan-lighten-2: #c859e6;
+$kan-lighten-3: #d685ed;
+$kan-darken-1: #761591;
+$kan-darken-2: #520f64;
+$kan-darken-3: #2d0838;
+
+Button.Kan {
+    background: $kan;
+    color: $text;
+    border-top: tall $kan-lighten-3;
+    border-bottom: tall $kan-darken-3;
+}
+
+Button.Kan:hover {
+    background: $kan-darken-2;
+    color: $text;
+    border-top: tall $kan;
+}
+
+Button.Kan.-active {
+    background: $kan;
+    border-bottom: tall $kan-lighten-3;
+    border-top: tall $kan-darken-3;
+}
+
+$reach: #e06c20;
+$reach-lighten-1: #e68a4d;
+$reach-lighten-2: #eca77a;
+$reach-lighten-3: #f3c5a6;
+$reach-darken-1: #b45619;
+$reach-darken-2: #874113;
+$reach-darken-3: #5a2b0d;
+
+Button.Reach {
+    background: $reach;
+    color: $text;
+    border-top: tall $reach-lighten-3;
+    border-bottom: tall $reach-darken-3;
+}
+
+Button.Reach:hover {
+    background: $reach-darken-2;
+    color: $text;
+    border-top: tall $reach;
+}
+
+Button.Reach.-active {
+    background: $reach;
+    border-bottom: tall $reach-lighten-3;
+    border-top: tall $reach-darken-3;
+}
+
+$hora: #c13535;
+$hora-lighten-1: #d15858;
+$hora-lighten-2: #dc8080;
+$hora-lighten-3: #e7a8a8;
+$hora-darken-1: #992a2a;
+$hora-darken-2: #711f1f;
+$hora-darken-3: #491414;
+
+Button.Hora {
+    background: $hora;
+    color: $text;
+    border-top: tall $hora-lighten-3;
+    border-bottom: tall $hora-darken-3;
+}
+
+Button.Hora:hover {
+    background: $hora-darken-2;
+    color: $text;
+    border-top: tall $hora;
+}
+
+Button.Hora.-active {
+    background: $hora;
+    border-bottom: tall $hora-lighten-3;
+    border-top: tall $hora-darken-3;
+}
+
+$none: #a0a0a0;
+$none-lighten-1: #bababa;
+$none-lighten-2: #d3d3d3;
+$none-lighten-3: #ededed;
+$none-darken-1: #878787;
+$none-darken-2: #6d6d6d;
+$none-darken-3: #545454;
+
+Button.None {
+    background: $none;
+    color: $text;
+    border-top: tall $none-lighten-3;
+    border-bottom: tall $none-darken-3;
+}
+
+Button.None:hover {
+    background: $none-darken-2;
+    color: $text;
+    border-top: tall $none;
+}
+
+Button.None.-active {
+    background: $none;
+    border-bottom: tall $none-lighten-3;
+    border-top: tall $none-darken-3;
+}
+
+$ryukyoku: #8574a1;
+$ryukyoku-lighten-1: #a092b6;
+$ryukyoku-lighten-2: #bab1ca;
+$ryukyoku-lighten-3: #d5cfdf;
+$ryukyoku-darken-1: #6c5b87;
+$ryukyoku-darken-2: #534768;
+$ryukyoku-darken-3: #3b324a;
+
+Button.Ryukyoku {
+    background: $ryukyoku;
+    color: $text;
+    border-top: tall $ryukyoku-lighten-3;
+    border-bottom: tall $ryukyoku-darken-3;
+}
+
+Button.Ryukyoku:hover {
+    background: $ryukyoku-darken-2;
+    color: $text;
+    border-top: tall $ryukyoku;
+}
+
+Button.Ryukyoku.-active {
+    background: $ryukyoku;
+    border-bottom: tall $ryukyoku-lighten-3;
+    border-top: tall $ryukyoku-darken-3;
+}
+
+$nukidora: #d5508d;
+$nukidora-lighten-1: #df79a8;
+$nukidora-lighten-2: #e9a2c3;
+$nukidora-lighten-3: #f3cbdd;
+$nukidora-darken-1: #c32f73;
+$nukidora-darken-2: #9a255b;
+$nukidora-darken-3: #711b42;
+
+Button.Nukidora {
+    background: $nukidora;
+    color: $text;
+    border-top: tall $nukidora-lighten-3;
+    border-bottom: tall $nukidora-darken-3;
+}
+
+Button.Nukidora:hover {
+    background: $nukidora-darken-2;
+    color: $text;
+    border-top: tall $nukidora;
+}
+
+Button.Nukidora.-active {
+    background: $nukidora;
+    border-bottom: tall $nukidora-lighten-3;
+    border-top: tall $nukidora-darken-3;
+}
+
+#recommandation_score {
+    width: 13;
+    height: 3;
+    margin: 1 0;
+}
+
+#best_action_button_action {
+    width: 1fr;
+    min-width: 9;
+    height: 5;
+}
+
+#logs_refresh_button {
+    width: 1fr;
+}
+
+/* =========== SettingsScreen =========== */
+
+ModelsScreen {
+    align: center middle;
+    background: $background 80%;
+}
+
+#models_label {
+    width: 1fr;
+    align: center middle;
+    text-align: center;
+    text-style: bold;
+}
+
+#models_select_container {
+    width: 60;
+    height: 18;
+    border: round $accent;
+    border-title-align: left;
+}
+
+#models_warning {
+    width: 1fr;
+    margin: 1;
+    align: center middle;
+    text-style: bold;
+    color: $warning;
+}
+
+#models_warning2 {
+    width: 1fr;
+    margin: 1;
+    align: center middle;
+    text-style: bold;
+    color: $warning;
+}
+
+#models_select {
+    width: 1fr;
+    margin: 1;
+}
+
+#models_select_button {
+    width: 1fr;
+    height: 5;
+    margin: 1;
+}
+
+/* =========== SettingsScreen =========== */
+SettingsScreen {
+    align: center middle;
+    background: $background 80%;
+}
+
+#settings__scrollable_container {
+    width: 60;
+    height: 80vh;
+    border: round $accent;
+    border-title-align: center;
+}
+
+#settings_button_container {
+    width: 1fr;
+    height: 5;
+    align: center middle;
+}
+
+#settings_save_button {
+    width: 1fr;
+    min-width: 9;
+    height: 3;
+    margin: 0 1;
+}
+
+#settings_cancel_button {
+    width: 1fr;
+    min-width: 9;
+    height: 3;
+    margin: 0 1;
+}
+
+.settings__vertical_container {
+    width: 1fr;
+    height: auto;
+    align: center middle;
+    border: round $accent;
+    border-title-align: left;
+}
+
+.settings__vertical_container_outer {
+    width: 1fr;
+    height: auto;
+    align: center middle;
+}
+
+.settings__row {
+    width: 1fr;
+    height: auto;
+    align: center middle;
+}
+
+.settings__key {
+    width: 1fr;
+    height: auto;
+    align: center middle;
+    text-align: left;
+    text-style: bold;
+    margin: 0 1;
+}
+
+.settings__select {
+    width: 2fr;
+    height: auto;
+    align: center middle;
+    margin: 0 1;
+}
+
+.settings__input {
+    width: 2fr;
+    height: auto;
+    align: center middle;
+    margin: 0 1;
+}
+
+.settings__switch {
+    width: auto;
+    height: auto;
+    align: center middle;
+    margin: 0 1;
+}
+
