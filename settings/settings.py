@@ -99,9 +99,34 @@ def load_settings() -> Settings:
     if not (FILE_PATH / "settings.schema.json").exists():
         raise FileNotFoundError("settings.schema.json not found")
     
-    # Load settings
-    with open(FILE_PATH / "settings.json", "r") as f:
-        settings = json.load(f)
+    try:
+        # Load settings
+        with open(FILE_PATH / "settings.json", "r") as f:
+            settings = json.load(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"settings.json corrupted: {e}")
+        logger.warning("Backup settings.json to settings.json.bak")
+        os.rename(FILE_PATH / "settings.json", FILE_PATH / "settings.json.bak")
+        logger.warning("Creating new settings.json")
+        with open(FILE_PATH / "settings.json", "w") as f:
+            json.dump({
+                "mitm": {
+                    "type": "majsoul",
+                    "host": "127.0.0.1",
+                    "port": 7880
+                },
+                "model": "mortal",
+                "theme": "textual-dark",
+                "ot_server": {
+                    "server": "http://127.0.0.1:5000",
+                    "online": False,
+                    "api_key": "your_api_key"
+                }
+            }, f, indent=4)
+        logger.info(f"Created new settings.json with default values")
+        # Load settings again
+        with open(FILE_PATH / "settings.json", "r") as f:
+            settings = json.load(f)
 
     # Load schema
     with open(FILE_PATH / "settings.schema.json", "r") as f:
