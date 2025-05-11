@@ -84,6 +84,8 @@
   - 使用 Python 3.12
   - 安裝相依套件 `pip install -r requirements.txt`
   - 將 MJAI 機器人放到 `./Akagi/mjai_bot`
+    - 內建模型：將 `./mjai_bot/mortal/libriichi/libriichi-<version>-<platform>.<extension>` 移動到 `./mjai_bot/mortal/libriichi.<extension>`。
+    - 三人模型亦同。
   - 執行 `run_akagi.py`
 
 # 使用方式
