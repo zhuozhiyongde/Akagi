@@ -66,11 +66,12 @@
 
 ### Supported Mahjong Games:
 
-| Platform      | Four Player   | Three Player   |
-| ------------- | ------------- | -------------- |
-| __Majsoul__   | &check;       | &check;        |
-| __Tenhou__    | &check;       | &cross;        |
-| __Amatsuki__  | &check;       | &cross;        |
+| Platform       | Four Player   | Three Player   |
+| -------------- | ------------- | -------------- |
+| __Majsoul__    | &check;       | &check;        |
+| __Tenhou__     | &check;       | &check;        |
+| __RiichiCity__ | &check;       | &check;        |
+| __Amatsuki__   | &check;       | &cross;        |
 
 # Installation
 
