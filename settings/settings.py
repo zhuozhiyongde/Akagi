@@ -37,6 +37,7 @@ class Settings:
     theme: str
     model: str
     ot: OTConfig
+    auto_switch_model: bool
     def update(self, settings: dict) -> None:
         """
         Update settings from a dictionary
@@ -52,6 +53,7 @@ class Settings:
         self.ot.server = settings["ot_server"]["server"]
         self.ot.online = settings["ot_server"]["online"]
         self.ot.api_key = settings["ot_server"]["api_key"]
+        self.auto_switch_model = settings["auto_switch_model"]
         self.save_ot_settings()
 
     def save_ot_settings(self) -> None:
@@ -99,7 +101,8 @@ class Settings:
                     "server": self.ot.server,
                     "online": self.ot.online,
                     "api_key": self.ot.api_key
-                }
+                },
+                "auto_switch_model": self.auto_switch_model
             }, f, indent=4)
         # Save the settings to the file
         logger.info(f"Saved settings to {FILE_PATH / 'settings.json'}")
@@ -145,7 +148,8 @@ def load_settings() -> Settings:
                     "server": "http://127.0.0.1:5000",
                     "online": False,
                     "api_key": "your_api_key"
-                }
+                },
+                "auto_switch_model": True
             }, f, indent=4)
         logger.info(f"Created new settings.json with default values")
         # Load settings again
@@ -173,7 +177,8 @@ def load_settings() -> Settings:
             server=settings["ot_server"]["server"],
             online=settings["ot_server"]["online"],
             api_key=settings["ot_server"]["api_key"]
-        )
+        ),
+        auto_switch_model=settings["auto_switch_model"]
     )
 
 def get_schema() -> dict:
