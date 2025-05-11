@@ -47,8 +47,15 @@ class Controller(object):
         ans = self.bot.react(json.dumps(events, separators=(",", ":")))
         return json.loads(ans)
 
-    def choose_bot(self, bot_index: int) -> bool:
+    def choose_bot_index(self, bot_index: int) -> bool:
         if 0 <= bot_index < len(self.available_bots):
             self.bot = self.available_bots[bot_index]()
+            return True
+        return False
+    
+    def choose_bot_name(self, bot_name: str) -> bool:
+        if bot_name in self.available_bots_names:
+            index = self.available_bots_names.index(bot_name)
+            self.bot = self.available_bots[index]()
             return True
         return False

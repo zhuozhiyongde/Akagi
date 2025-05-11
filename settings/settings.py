@@ -81,6 +81,29 @@ class Settings:
                 }, f, indent=4)
             logger.info(f"Updated {ot_setting_3p} with new settings")
 
+    def save(self) -> None:
+        """
+        Save the settings to the settings.json file
+        """
+        with open(FILE_PATH / "settings.json", "w") as f:
+            json.dump({
+                "mitm": {
+                    "type": self.mitm.type.value,
+                    "host": self.mitm.host,
+                    "port": self.mitm.port
+                },
+                "model": self.model,
+                "theme": self.theme,
+                "ot_server": {
+                    "server": self.ot.server,
+                    "online": self.ot.online,
+                    "api_key": self.ot.api_key
+                }
+            }, f, indent=4)
+        # Save the settings to the file
+        logger.info(f"Saved settings to {FILE_PATH / 'settings.json'}")
+        logger.info(f"Updated {FILE_PATH / 'settings.json'} with new settings")
+
 def load_settings() -> Settings:
     """
     Load settings from settings.json and validate them against settings.schema.json
