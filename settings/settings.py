@@ -13,6 +13,7 @@ FILE_PATH = Path(__file__).resolve().parent
 class MITMType(Enum):
     AMATSUKI = "amatsuki"
     MAJSOUL = "majsoul"
+    RIICHI_CITY = "riichi_city"
     TENHOU = "tenhou"
 
 @dataclasses.dataclass
