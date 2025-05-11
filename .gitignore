@@ -5,4 +5,4 @@ dist
 logs/*.log
 
 docker
-compile.sh
+compile
