@@ -38,11 +38,11 @@ from mitm.client import Client
 from mjai_bot.bot import AkagiBot
 from mjai_bot.controller import Controller
 from settings import MITMType, Settings, load_settings, get_settings, get_schema, verify_settings, save_settings
+from settings.settings import settings
 
 mitm_client: Client = None
 mjai_controller: Controller = None
 mjai_bot: AkagiBot = None
-settings: Settings = None
 
 # ============================================= #
 #               Settings Screen                 #
@@ -1035,7 +1035,6 @@ def main():
     global mitm_client, mjai_controller, mjai_bot, settings
 
     logger.info("Starting Akagi...")
-    settings = load_settings()
     logger.info(f"MITM Proxy: {settings.mitm.host}:{settings.mitm.port} ({settings.mitm.type})")
     mitm_client = Client()
     logger.info(f"Starting MJAI controller")
