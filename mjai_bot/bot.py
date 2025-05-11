@@ -37,21 +37,24 @@ class AkagiBot(Bot):
                 if event["type"] == "start_game":
                     self.player_id = event["id"]
                     self.player_state = PlayerState(self.player_id)
+                    self.is_3p = False
                     self.__discard_events = []
                     self.__call_events = []
                     self.__dora_indicators = []
                 if event["type"] == "start_kyoku":
                     if (
-                        event["bakaze"] == "E" and
-                        event["honba"] == 0 and
-                        event["kyoku"] == 1 and
-                        event["kyotaku"] == 0 and
-                        event["oya"] == 0 and
+                        # event["bakaze"] == "E" and
+                        # event["honba"] == 0 and
+                        # event["kyoku"] == 1 and
+                        # event["kyotaku"] == 0 and
+                        # event["oya"] == 0 and
+                        # event["scores"][3] == 0
+                        event["scores"][0] == 35000 and
+                        event["scores"][1] == 35000 and
+                        event["scores"][2] == 35000 and
                         event["scores"][3] == 0
                     ):
                         self.is_3p = True
-                    else:
-                        self.is_3p = False
                 if event["type"] == "start_kyoku" or event["type"] == "dora":
                     self.__dora_indicators.append(event["dora_marker"])
                 if event["type"] == "dahai":

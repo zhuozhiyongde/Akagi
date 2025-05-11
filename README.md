@@ -66,11 +66,12 @@
 
 ### Supported Mahjong Games:
 
-| Platform      | Four Player   | Three Player   |
-| ------------- | ------------- | -------------- |
-| __Majsoul__   | &check;       | &check;        |
-| __Tenhou__    | &check;       | &cross;        |
-| __Amatsuki__  | &check;       | &cross;        |
+| Platform       | Four Player   | Three Player   |
+| -------------- | ------------- | -------------- |
+| __Majsoul__    | &check;       | &check;        |
+| __Tenhou__     | &check;       | &check;        |
+| __RiichiCity__ | &check;       | &check;        |
+| __Amatsuki__   | &check;       | &cross;        |
 
 # Installation
 
@@ -85,6 +86,8 @@
   - Use Python 3.12
   - Install the dependencies using `pip install -r requirements.txt`.
   - Put MJAI bots in `./Akagi/mjai_bot`.
+    - For the builtin model, move `./mjai_bot/mortal/libriichi/libriichi-<version>-<platform>.<extension>` to `./mjai_bot/mortal/libriichi.<extension>`.
+    - Same for 3p model.
   - Run `run_akagi.py`.
 
 # Usage

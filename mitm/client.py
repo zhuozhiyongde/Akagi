@@ -37,6 +37,11 @@ class Client(object):
                 self._thread = threading.Thread(target=lambda: asyncio.run(start_proxy(settings.mitm.host, settings.mitm.port)))
                 self._thread.start()
                 self.messages = mjai_messages
+            case MITMType.RIICHI_CITY:
+                from mitm.riichi_city import start_proxy, mjai_messages
+                self._thread = threading.Thread(target=lambda: asyncio.run(start_proxy(settings.mitm.host, settings.mitm.port)))
+                self._thread.start()
+                self.messages = mjai_messages
             case MITMType.TENHOU:
                 from mitm.tenhou import start_proxy, mjai_messages
                 self._thread = threading.Thread(target=lambda: asyncio.run(start_proxy(settings.mitm.host, settings.mitm.port)))
@@ -55,6 +60,9 @@ class Client(object):
                 stop_proxy()
             case MITMType.MAJSOUL:
                 from mitm.majsoul import stop_proxy
+                stop_proxy()
+            case MITMType.RIICHI_CITY:
+                from mitm.riichi_city import stop_proxy
                 stop_proxy()
             case MITMType.TENHOU:
                 from mitm.tenhou import stop_proxy

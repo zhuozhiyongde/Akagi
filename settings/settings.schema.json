@@ -8,7 +8,7 @@
         "type": {
           "type": "string",
           "description": "The type of MITM service to use.",
-          "enum": ["amatsuki", "majsoul", "tenhou"]
+          "enum": ["amatsuki", "majsoul", "riichi_city", "tenhou"]
         },
         "host": {
           "type": "string",
@@ -52,10 +52,13 @@
       },
       "required": ["server", "online", "api_key"],
       "additionalProperties": false
+    },
+    "auto_switch_model": {
+      "type": "boolean",
+      "description": "Whether to automatically switch the model based on the game."
     }
   },
-  "required": ["mitm", "model", "theme", "ot_server"],
+  "required": ["mitm", "model", "theme", "ot_server", "auto_switch_model"],
   "description": "Settings for the application.",
   "additionalProperties": false
 }
-  

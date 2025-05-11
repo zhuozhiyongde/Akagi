@@ -38,11 +38,11 @@ from mitm.client import Client
 from mjai_bot.bot import AkagiBot
 from mjai_bot.controller import Controller
 from settings import MITMType, Settings, load_settings, get_settings, get_schema, verify_settings, save_settings
+from settings.settings import settings
 
 mitm_client: Client = None
 mjai_controller: Controller = None
 mjai_bot: AkagiBot = None
-settings: Settings = None
 
 # ============================================= #
 #               Settings Screen                 #
@@ -216,7 +216,7 @@ class SettingsScreen(Screen):
     @on(Button.Pressed, "#settings_save_button")
     def settings_save_button_clicked(self) -> None:
         """Handle Button.Pressed message sent by Save button."""
-        global settings
+        global settings, mjai_controller, mitm_client
         local_settings = self.get_settings()["settings"]
         logger.info(f"Verifying settings: {local_settings}")
         try:
@@ -224,6 +224,10 @@ class SettingsScreen(Screen):
             logger.info("Settings are valid, saving...")
             save_settings(local_settings)
             logger.info("Settings saved")
+            notify_restart_mitm = (
+                (local_settings["mitm"]["type"] != settings.mitm.type.value) and
+                mitm_client.running
+            )
             # Reload settings
             settings.update(get_settings())
             self.app.notify(
@@ -231,6 +235,22 @@ class SettingsScreen(Screen):
                 title="Settings Saved",
                 severity="information",
             )
+            if mjai_controller.choose_bot_name(settings.model):
+                logger.info(f"Selected model: {settings.model}")
+            else:
+                logger.error(f"Failed to select model: {settings.model}")
+                self.app.notify(
+                    f"Failed to select model: {settings.model}\n"
+                    "Please check the model name and try again.",
+                    title="Model Error",
+                    severity="error",
+                )
+            if notify_restart_mitm:
+                self.app.notify(
+                    "MITM settings changed, you need to restart MITM client for the changes to take effect.",
+                    title="MITM Settings Changed",
+                    severity="information",
+                )
             self.app.pop_screen()
         except Exception as e:
             logger.error("Settings are invalid, not saving")
@@ -273,15 +293,17 @@ class ModelsScreen(Screen):
     @on(Button.Pressed, "#models_select_button")
     def models_select_button_clicked(self) -> None:
         """Handle Button.Pressed message sent by Select button."""
-        global mjai_controller
+        global mjai_controller, settings
 
         models_select: Select = self.query_one("#models_select")
         selected_model = models_select.value
         if selected_model == Select.BLANK:
             return
         selected_model_index = mjai_controller.available_bots_names.index(selected_model)
-        if mjai_controller.choose_bot(selected_model_index):
+        if mjai_controller.choose_bot_index(selected_model_index):
             logger.info(f"Selected model: {selected_model}")
+            settings.model = selected_model
+            settings.save()
         else:
             logger.error(f"Failed to select model: {selected_model}")
         self.app.pop_screen()
@@ -1013,7 +1035,6 @@ def main():
     global mitm_client, mjai_controller, mjai_bot, settings
 
     logger.info("Starting Akagi...")
-    settings = load_settings()
     logger.info(f"MITM Proxy: {settings.mitm.host}:{settings.mitm.port} ({settings.mitm.type})")
     mitm_client = Client()
     logger.info(f"Starting MJAI controller")
