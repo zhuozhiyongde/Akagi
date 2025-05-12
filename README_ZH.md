@@ -246,6 +246,12 @@ TODO: 製作一個 tsumogiri bot 範例
 - [ ] 立直後推薦切牌
 - [ ] 槓後推薦切牌（極少見）
 
+# 作者
+
+- [Shinkuan](https://github.com/shinkuan/) - shinkuan318@gmail.com
+- [Discord](https://discord.gg/Z2wjXUK8bN)
+
+
 # 授權條款
 
 ```

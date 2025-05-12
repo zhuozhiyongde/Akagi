@@ -51,6 +51,9 @@ class ClientWebSocket(ClientWebSocketABC):
             else:
                 logger.error(f"WebSocket message received from unactivated flow: {flow.id}")
         except Exception as e:
+            # Release the lock if it is locked
+            if self.bridge_lock.locked():
+                self.bridge_lock.release()
             logger.error(f"Error: {traceback.format_exc()}")
             logger.error(f"Error: {str(e)}")
             logger.error(f"Error: {e.__traceback__.tb_lineno}")

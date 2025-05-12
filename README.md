@@ -245,6 +245,11 @@ TODO: make an tsumogiri bot example.
 - [ ] Show which tile to discard after call for riichi.
 - [ ] Show which tile to Kan after call for Kan (rare case).
 
+# Contact
+
+- [Shinkuan](https://github.com/shinkuan/) - shinkuan318@gmail.com
+- [Discord](https://discord.gg/Z2wjXUK8bN)
+
 # LICENSE
 
 ```
