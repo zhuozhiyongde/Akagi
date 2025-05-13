@@ -148,10 +148,16 @@ class RiichiCityBridge(BridgeBase):
                         if self.game_status.is_3p:
                             self.game_status.player_list.append(-1)
                         self.game_status.game_start = False
-                    kyoku = ((rc_msg.msg_data["data"]["dealer_pos"]-self.game_status.shift)%3)+1
+                    if self.game_status.is_3p:
+                        kyoku = ((rc_msg.msg_data["data"]["dealer_pos"]-self.game_status.shift)%3)+1
+                    else:
+                        kyoku = ((rc_msg.msg_data["data"]["dealer_pos"]-self.game_status.shift)%4)+1
                     honba = rc_msg.msg_data["data"]["ben_chang_num"]
                     kyotaku = rc_msg.msg_data["data"]["li_zhi_bang_num"]
-                    oya = ((rc_msg.msg_data["data"]["dealer_pos"]-self.game_status.shift)%3)
+                    if self.game_status.is_3p:
+                        oya = ((rc_msg.msg_data["data"]["dealer_pos"]-self.game_status.shift)%3)
+                    else:
+                        oya = ((rc_msg.msg_data["data"]["dealer_pos"]-self.game_status.shift)%4)
                     scores = [player["hand_points"] for player in rc_msg.msg_data["data"]["user_info_list"]]
                     if self.game_status.is_3p:
                         scores.append(0)
