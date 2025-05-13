@@ -186,8 +186,8 @@ class MajsoulBridge(BridgeBase):
                 if parsed:
                     parsed_list.extend(parsed)
             self.syncing = False
-            if len(parsed)>=1:
-                return parsed
+            if len(parsed_list)>=1:
+                return parsed_list
             else:
                 ret = []
                 return ret
