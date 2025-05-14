@@ -629,7 +629,23 @@ class Recommandation(Horizontal):
 
     @on(Button.Pressed, "#recommandation_button")
     def recommandation_button_clicked(self) -> None:
-        pass # TODO
+        # When clicked, check if the action is reach or kan_select
+        # 1. Reach:
+        #   - send reach action back to MJAI
+        # 2. Kan_select:
+        #   - TODO
+        global mitm_client
+        recommandation_button: Button = self.query_one("#recommandation_button")
+        if recommandation_button.label == "Reach":
+            # I think Mortal can tolerate getting multiple reach
+            # https://github.com/Equim-chan/Mortal/blob/3ec7a80f0f34446e9fd51c5df4a2940706874fe7/libriichi/src/state/update.rs#L665
+            mitm_client.messages.put({
+                "type": "reach",
+                "actor": mjai_controller.bot.player_id,
+            })
+        elif recommandation_button.label == "Kan":
+            # TODO
+            pass
 
 class Recommandations(Vertical):
     """
@@ -725,6 +741,26 @@ class BestAction(Horizontal):
             case _:
                 logger.error(f"Unknown action: {mjai_msg['type']}")
                 pass
+
+    @on(Button.Pressed, "#best_action_button_action")
+    def best_action_button_clicked(self) -> None:
+        # When clicked, check if the action is reach or kan_select
+        # 1. Reach:
+        #   - send reach action back to MJAI
+        # 2. Kan_select:
+        #   - TODO
+        global mitm_client
+        best_action_button_action: Button = self.query_one("#best_action_button_action")
+        if best_action_button_action.label == "Reach":
+            # I think Mortal can tolerate getting multiple reach
+            # https://github.com/Equim-chan/Mortal/blob/3ec7a80f0f34446e9fd51c5df4a2940706874fe7/libriichi/src/state/update.rs#L665
+            mitm_client.messages.put({
+                "type": "reach",
+                "actor": mjai_controller.bot.player_id,
+            })
+        elif best_action_button_action.label == "Kan":
+            # TODO
+            pass
 
 class BotStatus(Vertical):
     """
