@@ -70,7 +70,7 @@
 | __雀魂__      | &check;       | &check;        |
 | __天鳳__      | &check;       | &check;        |
 | __麻雀一番街__ | &check;       | &check;        |
-| __天月__      | &check;       | &cross;        |
+| __天月__      | &check;       | &check;        |
 
 # 安裝
 
