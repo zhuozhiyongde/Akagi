@@ -186,8 +186,8 @@ class MajsoulBridge(BridgeBase):
                 if parsed:
                     parsed_list.extend(parsed)
             self.syncing = False
-            if len(parsed)>=1:
-                return parsed
+            if len(parsed_list)>=1:
+                return parsed_list
             else:
                 ret = []
                 return ret
@@ -315,15 +315,12 @@ class MajsoulBridge(BridgeBase):
                 pai = MS_TILE_2_MJAI_TILE[liqi_message['data']['data']['tile']]
                 tsumogiri = liqi_message['data']['data']['moqie']
                 if liqi_message['data']['data']['isLiqi']:
-                    if liqi_message['data']['data']['seat'] == self.seat:
-                        pass
-                    else:
-                        ret.append(
-                            {
-                                'type': 'reach',
-                                'actor': actor
-                            }
-                        )
+                    ret.append(
+                        {
+                            'type': 'reach',
+                            'actor': actor
+                        }
+                    )
                 ret.append(
                     {
                         'type': 'dahai',

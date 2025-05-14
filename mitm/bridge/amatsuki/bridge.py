@@ -112,6 +112,9 @@ class AmatsukiBridge(BridgeBase):
         # Used when someone chi pon kan
         self.last_discard_actor: int = None
         self.last_discard: str = None
+        # Is Three Player
+        # This is used to check if the game is 3P or not
+        self.is_3p: bool = False
         pass
 
     def parse(self, content: bytes) -> None | list[dict]:
@@ -159,15 +162,22 @@ class AmatsukiBridge(BridgeBase):
                         if content_dict["errorCode"] != 0:
                             logger.warning(f"errorCode: {content_dict['errorCode']}")
                             return None
-                        if content_dict["gameType"] != 0:
+                        if content_dict["gameType"] != 0: # 0: Japanese Mahjong
                             logger.warning(f"Unsupported gameType: {content_dict['gameType']}")
                             return None
-                        if content_dict["gameMode"] != 0:
+                        if content_dict["gameMode"] == 0: # 0: 4P, 1: 3P
+                            self.is_3p = False
+                        elif content_dict["gameMode"] == 1: # 0: 4P, 1: 3P
+                            self.is_3p = True
+                        else:
                             logger.warning(f"Unsupported gameMode: {content_dict['gameMode']}")
                             return None
-                        if content_dict["maxCount"] != 4:
-                            logger.warning(f"Unsupported maxCount(playerCount): {content_dict['maxCount']}")
-                            return None
+                        # if content_dict["gameMode"] != 0: # 0: 4P, 1: 3P
+                        #     logger.warning(f"Unsupported gameMode: {content_dict['gameMode']}")
+                        #     return None
+                        # if content_dict["maxCount"] != 4: # 4: 4P, 3: 3P
+                        #     logger.warning(f"Unsupported maxCount(playerCount): {content_dict['maxCount']}")
+                        #     return None
                         self.valid_flow = True
                         self.desk_id = content_dict["deskId"]
                         return None
@@ -189,6 +199,8 @@ class AmatsukiBridge(BridgeBase):
                         is_all_last: bool = content_dict["isAllLast"]
                         oya: int = content_dict["oya"]
                         player_points: list[int] = content_dict["playerPoints"]
+                        if self.is_3p:
+                            player_points.append(0)
                         tehais: list[list[str]] = []
                         for idx, player_tile in enumerate(content_dict["playerTiles"]):
                             tehai: list[str] = []
@@ -211,6 +223,8 @@ class AmatsukiBridge(BridgeBase):
                             for tile in player_tile["tehai"]["hand"]:
                                 tehai.append(ID_TO_MJAI_PAI[tile["id"]])
                             tehais.append(tehai)
+                        if self.is_3p:
+                            tehais.append(["?"]*13)
                         if self.seat is None:
                             logger.error(f"Seat not found")
                             return None
@@ -345,11 +359,35 @@ class AmatsukiBridge(BridgeBase):
                             actor: int = content_dict["position"]
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
                             tsumogiri: bool = content_dict["isKiri"]
+                            # TODO: This will have problem when can_chi or can_pon to the reach pai.
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": tsumogiri},
                                 {"type": "reach_accepted", "actor": actor}
                             ]
+                        # ============================================================== #
+                        #                           WReach                               #
+                        # ============================================================== #
+                        if content_dict["action"] == "WREACH":
+                            actor: int = content_dict["position"]
+                            pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
+                            return [
+                                {"type": "reach", "actor": actor},
+                                {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": True},
+                                {"type": "reach_accepted", "actor": actor}
+                            ]
+                        # ============================================================== #
+                        #                          NukiDora                              #
+                        # ============================================================== #
+                        if content_dict["action"] == "KITA":
+                            assert self.is_3p, "nukidora is only available in 3P"
+                            actor: int = content_dict["position"]
+                            pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
+                            return [{
+                                "type": "nukidora",
+                                "actor": actor,
+                                "pai": pai
+                            }]
                     # ============================================================== #
                     #                         River Action                           #
                     # ============================================================== #

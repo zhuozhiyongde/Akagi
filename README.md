@@ -189,6 +189,11 @@ Click on the MJAI Info window to change kind of info you want to see.
 #### Changing theme:
 ![image](./docs/gifs/change_theme.gif)
 
+#### Call Reach
+The recommandation window does not show which tile to discard for riichi?
+You have to click on the "Reach" button to show the call reach recommendation.
+![image](./docs/gifs/call_reach.gif)
+
 ### Proxifier
 
 > [!NOTE]  
