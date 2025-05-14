@@ -191,6 +191,11 @@
 #### 更換主題：
 ![image](./docs/gifs/change_theme.gif)
 
+#### 立直宣告
+由於MJAI協議的限制，建議欄為立直時並不會顯示棄牌。
+你必須手動點擊立直按鈕來宣告立直。
+![image](./docs/gifs/call_reach.gif)
+
 ### Proxifier
 
 > [!NOTE]  
