@@ -71,7 +71,7 @@
 | __Majsoul__    | &check;       | &check;        |
 | __Tenhou__     | &check;       | &check;        |
 | __RiichiCity__ | &check;       | &check;        |
-| __Amatsuki__   | &check;       | &cross;        |
+| __Amatsuki__   | &check;       | &check;        |
 
 # Installation
 
