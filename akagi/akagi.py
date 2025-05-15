@@ -453,11 +453,12 @@ class Tehai(Horizontal):
 
         tehai: list[str] = mjai_bot.tehai_mjai
         tsumo: str = mjai_bot.last_self_tsumo
-        if tsumo == "":
-            tsumo = "?"
-        else:
-            if (tsumo in tehai and len(tehai) in (14, 11, 8, 5, 2)):
+        if len(tehai) in [14, 11, 8, 5, 2]:
+            if tsumo in tehai:
                 tehai.remove(tsumo)
+        else:
+            tsumo = "?"
+            
         for i in range(13):
             tehai_label: Label = self.query_one(f"#tehai_{i}")
             if i < len(tehai):
