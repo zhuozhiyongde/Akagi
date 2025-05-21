@@ -249,8 +249,8 @@ TODO: 製作一個 tsumogiri bot 範例
 ## TODO
 
 - [x] 支援三人麻將
-- [ ] 支援 RiichiCity
-- [ ] 立直後推薦切牌
+- [x] 支援 RiichiCity
+- [x] 立直後推薦切牌
 - [ ] 槓後推薦切牌（極少見）
 
 # 作者

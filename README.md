@@ -248,8 +248,8 @@ TODO: make an tsumogiri bot example.
 ## TODO
 
 - [x] Three Player Mahjong support.
-- [ ] RiichiCity support.
-- [ ] Show which tile to discard after call for riichi.
+- [x] RiichiCity support.
+- [x] Show which tile to discard after call for riichi.
 - [ ] Show which tile to Kan after call for Kan (rare case).
 
 # Contact
