@@ -105,6 +105,9 @@ class AmatsukiBridge(BridgeBase):
         # This is used to store the temp_start_round command temporarily
         # until the dora indicator is received
         self.temp_start_round: dict = None
+        # temp reach accepted command
+        # reach accepted command is made after confirming that no one has pon chi
+        self.temp_reach_accepted: dict = None
         # Current dora count
         # When the dora indicator is received, this will be incremented
         self.current_dora_count: int = 1
@@ -295,7 +298,12 @@ class AmatsukiBridge(BridgeBase):
                         pai: str = "?"
                         if content_dict["position"] == self.seat:
                             pai = ID_TO_MJAI_PAI[content_dict["hai"]["id"]]
-                        return [{"type": "tsumo", "actor": actor, "pai": pai}]
+                        ret = []
+                        if self.temp_reach_accepted:
+                            ret.append(self.temp_reach_accepted)
+                            self.temp_reach_accepted = None
+                        ret.append({"type": "tsumo", "actor": actor, "pai": pai})
+                        return ret
                     # ============================================================== #
                     #                         Tehai Action                           #
                     # ============================================================== #
@@ -359,11 +367,10 @@ class AmatsukiBridge(BridgeBase):
                             actor: int = content_dict["position"]
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
                             tsumogiri: bool = content_dict["isKiri"]
-                            # TODO: This will have problem when can_chi or can_pon to the reach pai.
+                            self.temp_reach_accepted = {"type": "reach_accepted", "actor": actor}
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": tsumogiri},
-                                {"type": "reach_accepted", "actor": actor}
                             ]
                         # ============================================================== #
                         #                           WReach                               #
@@ -371,10 +378,10 @@ class AmatsukiBridge(BridgeBase):
                         if content_dict["action"] == "WREACH":
                             actor: int = content_dict["position"]
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
+                            self.temp_reach_accepted = {"type": "reach_accepted", "actor": actor}
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": True},
-                                {"type": "reach_accepted", "actor": actor}
                             ]
                         # ============================================================== #
                         #                          NukiDora                              #
