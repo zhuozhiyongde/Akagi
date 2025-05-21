@@ -360,7 +360,7 @@ ModelsScreen {
 
 #models_select_container {
     width: 60;
-    height: 22;
+    max-height: 25;
     border: round $accent;
     border-title-align: left;
 }
@@ -382,6 +382,18 @@ ModelsScreen {
 }
 
 #models_select {
+    width: 1fr;
+    margin: 1;
+}
+
+#autoplay_window_label {
+    width: 1fr;
+    align: center middle;
+    text-align: center;
+    text-style: bold;
+}
+
+#models_window_select {
     width: 1fr;
     margin: 1;
 }

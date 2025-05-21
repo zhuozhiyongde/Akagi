@@ -295,11 +295,12 @@ class ModelsScreen(Screen):
         global mjai_controller, autoplay, settings
         self.windows = autoplay.get_windows()
         windows_names = [window.name for window in self.windows]
-        yield Vertical(
+        yield ScrollableContainer(
             Static("Models", id="models_label"),
             Select.from_values(mjai_controller.available_bots_names, id="models_select"),
             Static("Warning: This will restart the bot, do not change model during a match!", id="models_warning"),
             Static("Warning: To play 3P Mahjong, a 3P model is needed.", id="models_warning2"),
+            Static("Autoplay Window", id="autoplay_window_label"),
             Select.from_values(windows_names, id="models_window_select"),
             Button("Select", variant="primary", id="models_select_button"),
             id="models_select_container",
