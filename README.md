@@ -66,12 +66,14 @@
 
 ### Supported Mahjong Games:
 
-| Platform       | Four Player   | Three Player   |
-| -------------- | ------------- | -------------- |
-| __Majsoul__    | &check;       | &check;        |
-| __Tenhou__     | &check;       | &check;        |
-| __RiichiCity__ | &check;       | &check;        |
-| __Amatsuki__   | &check;       | &check;        |
+| Platform       | Four Player   | Three Player   | AutoPlay |
+| -------------- | ------------- | -------------- | -------- |
+| __Majsoul__    | &check;       | &check;        | *&check; |
+| __Tenhou__     | &check;       | &check;        |  &cross; |
+| __RiichiCity__ | &check;       | &check;        |  &cross; |
+| __Amatsuki__   | &check;       | &check;        |  &cross; |
+
+*AutoPlay only avaliable on [Windows Release version](https://github.com/shinkuan/Akagi/releases) when ot_server is running.
 
 # Installation
 

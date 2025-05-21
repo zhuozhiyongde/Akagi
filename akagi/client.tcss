@@ -360,7 +360,7 @@ ModelsScreen {
 
 #models_select_container {
     width: 60;
-    height: 18;
+    height: 22;
     border: round $accent;
     border-title-align: left;
 }

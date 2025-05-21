@@ -65,12 +65,14 @@
 
 ### 支援的麻將遊戲：
 
-| 平台          | 四人麻將       | 三人麻將       |
-| ------------- | ------------- | -------------- |
-| __雀魂__      | &check;       | &check;        |
-| __天鳳__      | &check;       | &check;        |
-| __麻雀一番街__ | &check;       | &check;        |
-| __天月__      | &check;       | &check;        |
+| 平台          | 四人麻將       | 三人麻將       | 自動打牌 |
+| ------------- | ------------- | -------------- | -------- |
+| __雀魂__      | &check;       | &check;        | *&check; |
+| __天鳳__      | &check;       | &check;        |  &cross; |
+| __麻雀一番街__ | &check;       | &check;        |  &cross; |
+| __天月__      | &check;       | &check;        |  &cross; |
+
+*自動打牌僅支援[Windows Release版](https://github.com/shinkuan/Akagi/releases)，且ot_server必須啟用。
 
 # 安裝
 

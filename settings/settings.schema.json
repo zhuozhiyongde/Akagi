@@ -53,12 +53,16 @@
       "required": ["server", "online", "api_key"],
       "additionalProperties": false
     },
+    "autoplay": {
+      "type": "boolean",
+      "description": "Whether to enable autoplay for the game."
+    },
     "auto_switch_model": {
       "type": "boolean",
       "description": "Whether to automatically switch the model based on the game."
     }
   },
-  "required": ["mitm", "model", "theme", "ot_server", "auto_switch_model"],
+  "required": ["mitm", "model", "theme", "ot_server", "autoplay", "auto_switch_model"],
   "description": "Settings for the application.",
   "additionalProperties": false
 }
