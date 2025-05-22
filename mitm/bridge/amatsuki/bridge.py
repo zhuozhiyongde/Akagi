@@ -368,6 +368,7 @@ class AmatsukiBridge(BridgeBase):
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
                             tsumogiri: bool = content_dict["isKiri"]
                             self.temp_reach_accepted = {"type": "reach_accepted", "actor": actor}
+                            self.last_discard_actor = actor
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": tsumogiri},
@@ -379,6 +380,7 @@ class AmatsukiBridge(BridgeBase):
                             actor: int = content_dict["position"]
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
                             self.temp_reach_accepted = {"type": "reach_accepted", "actor": actor}
+                            self.last_discard_actor = actor
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": True},
