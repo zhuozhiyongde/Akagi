@@ -710,6 +710,8 @@ class Recommandations(Vertical):
         global mjai_bot
         if "meta" not in mjai_msg:
             return
+        if "q_values" not in mjai_msg["meta"]:
+            return
         meta = mjai_msg["meta"]
         recommands: list[tuple[str, float]] = meta_to_recommend(meta, mjai_bot.is_3p)
         for i in range(self.RECOMMANDATION_COUNT):
