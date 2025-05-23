@@ -978,6 +978,12 @@ class AkagiApp(App):
             )
             logger.error("No bot selected, please make sure you have bots installed in ./mjai_bot directory")
 
+        # ============================================= #
+        #                    MITM                       #
+        # ============================================= #
+        if not mitm_client.running:
+            self.mitm_start_button_clicked()
+
     def compose(self) -> ComposeResult:
         """
         Create child widgets for the app.
