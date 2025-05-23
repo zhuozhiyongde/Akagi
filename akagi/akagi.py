@@ -269,7 +269,7 @@ class SettingsScreen(Screen):
                         self.app.notify(
                             f"Autoplay window found: {window.name}",
                             title="Autoplay",
-                            severity="info",
+                            severity="information",
                         )
                     else:
                         logger.warning("No autoplay window found")
@@ -1081,7 +1081,7 @@ class AkagiApp(App):
                 self.app.notify(
                     f"Autoplay window found: {window.name}",
                     title="Autoplay",
-                    severity="info",
+                    severity="information",
                 )
             else:
                 logger.warning("No autoplay window found")
