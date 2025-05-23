@@ -19,11 +19,33 @@
   </p>
 </p>
 
+<p align="center">
+  <a href="https://github.com/shinkuan/Akagi"><img src="https://img.shields.io/github/stars/shinkuan/Akagi?logo=github" alt="GitHub stars" /></a>
+  <a href="https://github.com/shinkuan/Akagi/releases"><img src="https://img.shields.io/github/v/release/shinkuan/Akagi?label=release&logo=github" alt="GitHub release" /></a>
+  <a href="https://github.com/shinkuan/Akagi/issues"><img src="https://img.shields.io/github/issues/shinkuan/Akagi?logo=github" alt="GitHub issues" /></a>
+  <a href="https://github.com/shinkuan/Akagi"><img src="https://img.shields.io/github/languages/top/shinkuan/Akagi?logo=python" alt="Top language" /></a>
+  <a href="https://discord.gg/Z2wjXUK8bN"><img src="https://img.shields.io/discord/1192792431364673577?label=discord&logo=discord&color=7289DA" alt="Discord" /></a>
+</p>
+
 # 關於
 
 ## 「本專案旨在提供一個便利的方式，讓玩家可以即時了解自己在麻將對局中的表現，並藉此學習與進步。此專案僅供教育用途，作者不對使用者利用此專案採取的任何行為負責。若使用者違反遊戲服務條款，遊戲開發者與發行商有權進行處置，包含帳號停權等後果，與作者無關。」
 
 ![image](./docs/images/example_majsoul.png)
+
+# 功能
+- 即時顯示對局資訊
+- 即時顯示 AI 評估
+- 支援雀魂、天鳳、麻雀一番街、天月
+- 支援四人麻將與三人麻將
+- 可使用多種 AI 模型
+  - 內建模型
+  - 線上伺服器模型
+  - 自製模型
+- 自動化對局
+  - *只有在Windows Release版中開啟ot_server時可用
+- TUI 介面
+  - 支援多種主題
 
 # 目錄
 
@@ -35,12 +57,13 @@
 - [開始前](#開始前)
 - [安裝](#安裝)
 - [使用方式](#使用方式)
+- [常見問題](#常見問題)
 - [開發者](#開發者)
 - [授權](#授權)
 
 # 開始前
 
-[教學影片連結](https://youtu.be/Z88Ncxbe2nw)
+🎥[教學影片連結](https://youtu.be/Z88Ncxbe2nw)
 
 ### 你將需要：
 
@@ -210,6 +233,29 @@
 #### Proxifier 規則設定範例：
 ![image](./docs/images/proxifier/open_proxy_rule.png)
 ![image](./docs/images/proxifier/proxy_rule_setting.png)
+
+<!-- Trobleshooting -->
+# 常見問題
+
+你可以到[Discord](https://discord.gg/Z2wjXUK8bN)上詢問問題。
+
+> [!TIP]
+> 若你有任何問題，請附上日誌檔案，這樣我才能更快地幫助你。
+> 日誌檔案位於 `./logs/` 資料夾中。
+
+> [!NOTE]
+> 若你在使用過程中遇到任何問題，你可以到Github Issues頁面回報問題。
+> 或是到[Discord](https://discord.gg/Z2wjXUK8bN)上詢問問題。
+
+- MITM Proxy 無法啟動
+  - 確認是否有其他程式佔用埠口
+  - 確認是否有安裝MITM Proxy證書
+  - 確認設定的 Host 與 Port 是否正確
+  - 確認是否有防火牆阻擋 MITM Proxy
+  - 確認你的 Proxifier 設定是否正確
+  - 確認MITM Proxy Server是否已經啟動
+  - 如果還是無法啟動，請參考[這個Issue](https://github.com/shinkuan/Akagi/issues/57).
+
 
 # 開發者
 

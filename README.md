@@ -19,11 +19,39 @@
   </p>
 </p>
 
+<p align="center">
+  <a href="https://github.com/shinkuan/Akagi"><img src="https://img.shields.io/github/stars/shinkuan/Akagi?logo=github" alt="GitHub stars" /></a>
+  <a href="https://github.com/shinkuan/Akagi/releases"><img src="https://img.shields.io/github/v/release/shinkuan/Akagi?label=release&logo=github" alt="GitHub release" /></a>
+  <a href="https://github.com/shinkuan/Akagi/issues"><img src="https://img.shields.io/github/issues/shinkuan/Akagi?logo=github" alt="GitHub issues" /></a>
+  <a href="https://github.com/shinkuan/Akagi"><img src="https://img.shields.io/github/languages/top/shinkuan/Akagi?logo=python" alt="Top language" /></a>
+  <a href="https://discord.gg/Z2wjXUK8bN"><img src="https://img.shields.io/discord/1192792431364673577?label=discord&logo=discord&color=7289DA" alt="Discord" /></a>
+</p>
+
 # About
 
 ## "The purpose of this project is to provide people with a convenient way to real-time understand their performance in Mahjong game matches and to learn and improve from it. This project is intended for educational purposes only, and the author is not responsible for any actions taken by users using this project. Game developers and publishers have the right to take action against users who violate their terms of service, any consequences such as account suspension are not related to the author."
 
 ![image](./docs/images/example_majsoul.png)
+
+# Feature
+- Real-time analysis of your game.
+- Support for multiple platforms.
+  - Majsoul
+  - Tenhou
+  - RiichiCity
+  - Amatsuki
+- Support for multiple game modes.
+  - Four Player
+  - Three Player
+- Support for multiple AI models.
+  - Builtin model
+  - Online server model
+  - Your own model
+- AutoPlay
+  - *Only available on Windows Release version when ot_server is running.
+- TUI
+  - Using Textual UI.
+  - Support for multiple themes.
 
 # Table of Contents
 
@@ -35,12 +63,13 @@
 - [Before You Start](#before-you-start)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Troubleshooting](#troubleshooting)
 - [Developer](#developer)
 - [LICENSE](#license)
   
 # Before You Start
 
-[YouTube Video for you to follow.](https://youtu.be/Z88Ncxbe2nw)
+🎥[YouTube Video for you to follow.](https://youtu.be/Z88Ncxbe2nw)
 
 ### You will need:
 
@@ -208,6 +237,27 @@ You have to click on the "Reach" button to show the call reach recommendation.
 #### Example Proxifier proxy rules:
 ![image](./docs/images/proxifier/open_proxy_rule.png)
 ![image](./docs/images/proxifier/proxy_rule_setting.png)
+
+# Troubleshooting
+
+You can ask for help in the [Discord](https://discord.gg/Z2wjXUK8bN) server.
+
+> [!TIP]
+> If you encounter any issues, please check the logs in `./logs/` folder.
+> The logs are saved in the `./logs/` folder.
+> You can also check the GitHub Issues
+
+> [!NOTE]
+> If you find a bug, please report it in the GitHub Issues.
+> You can also report it in the Discord server.
+> If you have a feature request, please report it in the GitHub Issues.
+
+- MITM Proxy server not working?
+  - Make sure you have installed the MITM proxy certificate.
+  - Make sure you have set the correct host and port in the settings.
+  - Make sure you have set the correct proxy settings in Proxifier.
+  - Make sure you have started the MITM proxy server.
+  - If above does not work, please [check this issue](https://github.com/shinkuan/Akagi/issues/57).
 
 # Developer
 
