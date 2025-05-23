@@ -254,14 +254,30 @@ class SettingsScreen(Screen):
                     title="MITM Settings Changed",
                     severity="information",
                 )
-            if settings.autoplay and settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou"]:
-                self.app.notify(
-                    f"Autoplay does not support {settings.mitm.type.value} yet, please disable it.",
-                    title="Autoplay Warning",
-                    severity="warning",
-                )
-            else:
-                autoplay.set_autoplay()
+            if settings.autoplay:
+                if settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou"]:
+                    self.app.notify(
+                        f"Autoplay does not support {settings.mitm.type.value} yet, please disable it.",
+                        title="Autoplay Warning",
+                        severity="warning",
+                    )
+                else:
+                    autoplay.set_autoplay()
+                    window = autoplay.auto_select_window()
+                    if window is not None:
+                        logger.info(f"Autoplay window found: {window.name}")
+                        self.app.notify(
+                            f"Autoplay window found: {window.name}",
+                            title="Autoplay",
+                            severity="info",
+                        )
+                    else:
+                        logger.warning("No autoplay window found")
+                        self.app.notify(
+                            "No autoplay window found, select a target window manually",
+                            title="Autoplay",
+                            severity="warning",
+                        )
             self.app.pop_screen()
         except Exception as e:
             logger.error("Settings are invalid, not saving")
@@ -1006,7 +1022,7 @@ class AkagiApp(App):
         Main loop for the application.
         """
         try:
-            global mitm_client, mjai_controller, mjai_bot, settings, autoplay
+            global mitm_client, mjai_controller, mjai_bot, settings
             if not mitm_client.running:
                 return
             mjai_msgs = mitm_client.dump_messages()
@@ -1046,15 +1062,36 @@ class AkagiApp(App):
                     ((mjai_response["type"] != "none" or mjai_bot.can_act_3p) and (    mjai_bot.is_3p))
                 ):
                     if settings.autoplay:
-                        self.set_timer(3, partial(self.autoplay, mjai_response))
+                        self.set_timer(0.1, partial(self.autoplay, mjai_response))
         except Exception as e:
             logger.error(f"Error in main loop: {traceback.format_exc()}")
+
+    def find_autoplay_window(self) -> None:
+        global settings, autoplay, mitm_client
+        if settings.autoplay:
+            window = autoplay.auto_select_window()
+            if window is not None:
+                logger.info(f"Autoplay window found: {window.name}")
+                self.app.notify(
+                    f"Autoplay window found: {window.name}",
+                    title="Autoplay",
+                    severity="info",
+                )
+            else:
+                logger.warning("No autoplay window found")
+                self.app.notify(
+                    "No autoplay window found, select a target window manually",
+                    title="Autoplay",
+                    severity="warning",
+                )
 
     def autoplay(self, mjai_response: dict) -> None:
         """
         Autoplay function to handle MJAI messages.
         """
         global autoplay, mitm_client, mjai_controller
+        if (not autoplay.check_window()):
+            self.find_autoplay_window()
         autoplay.act(mjai_response)
         if mjai_response["type"] == "reach":
             mitm_client.messages.put({
@@ -1095,12 +1132,6 @@ class AkagiApp(App):
             mitm_client.start()
             option1_button.label = "MITM\n\nRunning"
             option1_button.variant = "success"
-            if settings.autoplay and autoplay.target_window is None:
-                self.app.notify(
-                    "Autoplay is enabled, but no target window is selected. Please select a target window.",
-                    title="Autoplay Warning",
-                    severity="warning",
-                )
 
     @on(Button.Pressed, "#option2_button")
     def settings_button_clicked(self) -> None:

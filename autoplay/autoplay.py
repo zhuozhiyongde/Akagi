@@ -56,6 +56,19 @@ class AutoPlay(object):
         Selects a window by its handle (hwnd).
         """
         pass
+
+    def check_window(self) -> bool:
+        """
+        Checks if the target window is valid and visible.
+        Returns True if the target window is valid, False otherwise.
+        """
+        return False
+    
+    def auto_select_window(self) -> None:
+        """
+        Automatically selects the window based on the current settings.
+        """
+        pass
     
     def act(self, mjai_msg: dict):
         """
