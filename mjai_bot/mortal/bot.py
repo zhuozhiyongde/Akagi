@@ -88,7 +88,14 @@ class Bot:
             return_action = self.model.react(json.dumps(e, separators=(",", ":")))
 
         if return_action is None:
-            return json.dumps({"type":"none"}, separators=(",", ":"))
+            return_action = {"type":"none"}
+            # ========== Online Server =========== #
+            if model.ot_settings['online']:
+                raw_data = json.loads(return_action)
+                raw_data["meta"] = {"online": model.is_online}
+                return_action = json.dumps(raw_data, separators=(",", ":"))
+            # ==================================== #
+            return json.dumps(return_action, separators=(",", ":"))
         else:
             # ========== Online Server =========== #
             if model.ot_settings['online']:
