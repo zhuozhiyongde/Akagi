@@ -352,8 +352,10 @@ class AmatsukiBridge(BridgeBase):
                             if pai in ["5m", "5p", "5s"]:
                                 consumed = [pai]*3
                                 consumed[0] += "r"
-                            if pai in ["5mr", "5pr", "5sr"]:
+                            elif pai in ["5mr", "5pr", "5sr"]:
                                 consumed = [pai[:-1]]*3
+                            else:
+                                consumed = [pai]*3
                             return [{
                                 "type": "kakan",
                                 "actor": actor,
