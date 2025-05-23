@@ -231,6 +231,7 @@ class SettingsScreen(Screen):
                 (local_settings["mitm"]["type"] != settings.mitm.type.value) and
                 mitm_client.running
             )
+            update_model = local_settings["model"] != settings.model
             # Reload settings
             settings.update(get_settings())
             self.app.notify(
@@ -238,16 +239,17 @@ class SettingsScreen(Screen):
                 title="Settings Saved",
                 severity="information",
             )
-            if mjai_controller.choose_bot_name(settings.model):
-                logger.info(f"Selected model: {settings.model}")
-            else:
-                logger.error(f"Failed to select model: {settings.model}")
-                self.app.notify(
-                    f"Failed to select model: {settings.model}\n"
-                    "Please check the model name and try again.",
-                    title="Model Error",
-                    severity="error",
-                )
+            if update_model:
+                if mjai_controller.choose_bot_name(settings.model):
+                    logger.info(f"Selected model: {settings.model}")
+                else:
+                    logger.error(f"Failed to select model: {settings.model}")
+                    self.app.notify(
+                        f"Failed to select model: {settings.model}\n"
+                        "Please check the model name and try again.",
+                        title="Model Error",
+                        severity="error",
+                    )
             if notify_restart_mitm:
                 self.app.notify(
                     "MITM settings changed, you need to restart MITM client for the changes to take effect.",
