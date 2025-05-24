@@ -13,6 +13,7 @@ import subprocess
 from pathlib import Path
 from sys import executable
 from threading import Thread
+from functools import partial
 from datetime import datetime
 
 from rich.text import Text
@@ -37,12 +38,14 @@ from .libriichi_helper import meta_to_recommend
 from mitm.client import Client
 from mjai_bot.bot import AkagiBot
 from mjai_bot.controller import Controller
+from autoplay.autoplay import AutoPlay
 from settings import MITMType, Settings, load_settings, get_settings, get_schema, verify_settings, save_settings
 from settings.settings import settings
 
 mitm_client: Client = None
 mjai_controller: Controller = None
 mjai_bot: AkagiBot = None
+autoplay: AutoPlay = None
 
 # ============================================= #
 #               Settings Screen                 #
@@ -216,7 +219,7 @@ class SettingsScreen(Screen):
     @on(Button.Pressed, "#settings_save_button")
     def settings_save_button_clicked(self) -> None:
         """Handle Button.Pressed message sent by Save button."""
-        global settings, mjai_controller, mitm_client
+        global settings, mjai_controller, mitm_client, autoplay
         local_settings = self.get_settings()["settings"]
         logger.info(f"Verifying settings: {local_settings}")
         try:
@@ -228,6 +231,7 @@ class SettingsScreen(Screen):
                 (local_settings["mitm"]["type"] != settings.mitm.type.value) and
                 mitm_client.running
             )
+            update_model = local_settings["model"] != settings.model
             # Reload settings
             settings.update(get_settings())
             self.app.notify(
@@ -235,22 +239,47 @@ class SettingsScreen(Screen):
                 title="Settings Saved",
                 severity="information",
             )
-            if mjai_controller.choose_bot_name(settings.model):
-                logger.info(f"Selected model: {settings.model}")
-            else:
-                logger.error(f"Failed to select model: {settings.model}")
-                self.app.notify(
-                    f"Failed to select model: {settings.model}\n"
-                    "Please check the model name and try again.",
-                    title="Model Error",
-                    severity="error",
-                )
+            if update_model:
+                if mjai_controller.choose_bot_name(settings.model):
+                    logger.info(f"Selected model: {settings.model}")
+                else:
+                    logger.error(f"Failed to select model: {settings.model}")
+                    self.app.notify(
+                        f"Failed to select model: {settings.model}\n"
+                        "Please check the model name and try again.",
+                        title="Model Error",
+                        severity="error",
+                    )
             if notify_restart_mitm:
                 self.app.notify(
                     "MITM settings changed, you need to restart MITM client for the changes to take effect.",
                     title="MITM Settings Changed",
                     severity="information",
                 )
+            if settings.autoplay:
+                if settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou"]:
+                    self.app.notify(
+                        f"Autoplay does not support {settings.mitm.type.value} yet, please disable it.",
+                        title="Autoplay Warning",
+                        severity="warning",
+                    )
+                else:
+                    autoplay.set_autoplay()
+                    window = autoplay.auto_select_window()
+                    if window is not None:
+                        logger.info(f"Autoplay window found: {window.name}")
+                        self.app.notify(
+                            f"Autoplay window found: {window.name}",
+                            title="Autoplay",
+                            severity="information",
+                        )
+                    else:
+                        logger.warning("No autoplay window found")
+                        self.app.notify(
+                            "No autoplay window found, select a target window manually",
+                            title="Autoplay",
+                            severity="warning",
+                        )
             self.app.pop_screen()
         except Exception as e:
             logger.error("Settings are invalid, not saving")
@@ -275,17 +304,22 @@ class ModelsScreen(Screen):
     BINDINGS = [("escape", "app.pop_screen", "back")]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.windows: list = []
 
     def on_mount(self) -> None:
         pass
 
     def compose(self) -> ComposeResult:
-        global mjai_controller
-        yield Vertical(
+        global mjai_controller, autoplay, settings
+        self.windows = autoplay.get_windows()
+        windows_names = [window.name for window in self.windows]
+        yield ScrollableContainer(
             Static("Models", id="models_label"),
             Select.from_values(mjai_controller.available_bots_names, id="models_select"),
             Static("Warning: This will restart the bot, do not change model during a match!", id="models_warning"),
             Static("Warning: To play 3P Mahjong, a 3P model is needed.", id="models_warning2"),
+            Static("Autoplay Window", id="autoplay_window_label"),
+            Select.from_values(windows_names, id="models_window_select"),
             Button("Select", variant="primary", id="models_select_button"),
             id="models_select_container",
         )
@@ -293,19 +327,27 @@ class ModelsScreen(Screen):
     @on(Button.Pressed, "#models_select_button")
     def models_select_button_clicked(self) -> None:
         """Handle Button.Pressed message sent by Select button."""
-        global mjai_controller, settings
+        global mjai_controller, settings, autoplay
 
         models_select: Select = self.query_one("#models_select")
         selected_model = models_select.value
-        if selected_model == Select.BLANK:
-            return
-        selected_model_index = mjai_controller.available_bots_names.index(selected_model)
-        if mjai_controller.choose_bot_index(selected_model_index):
-            logger.info(f"Selected model: {selected_model}")
-            settings.model = selected_model
-            settings.save()
-        else:
-            logger.error(f"Failed to select model: {selected_model}")
+        if selected_model != Select.BLANK:
+            selected_model_index = mjai_controller.available_bots_names.index(selected_model)
+            if mjai_controller.choose_bot_index(selected_model_index):
+                logger.info(f"Selected model: {selected_model}")
+                settings.model = selected_model
+                settings.save()
+            else:
+                logger.error(f"Failed to select model: {selected_model}")
+        
+        selected_window: Select = self.query_one("#models_window_select")
+        selected_window_name = selected_window.value
+        if selected_window_name != Select.BLANK:
+            for i, window in enumerate(self.windows):
+                if window.name == selected_window_name:
+                    autoplay.select_window(window.hwnd)
+                    break
+
         self.app.pop_screen()
 
 # ============================================= #
@@ -453,11 +495,14 @@ class Tehai(Horizontal):
 
         tehai: list[str] = mjai_bot.tehai_mjai
         tsumo: str = mjai_bot.last_self_tsumo
-        if tsumo == "":
-            tsumo = "?"
-        else:
-            if (tsumo in tehai and len(tehai) in (14, 11, 8, 5, 2)):
+        if len(tehai) in [14, 11, 8, 5, 2]:
+            if tsumo in tehai:
                 tehai.remove(tsumo)
+            else:
+                tsumo = "?"
+        else:
+            tsumo = "?"
+
         for i in range(13):
             tehai_label: Label = self.query_one(f"#tehai_{i}")
             if i < len(tehai):
@@ -664,6 +709,8 @@ class Recommandations(Vertical):
     def update_recommandation(self, mjai_msg: dict) -> None:
         global mjai_bot
         if "meta" not in mjai_msg:
+            return
+        if "q_values" not in mjai_msg["meta"]:
             return
         meta = mjai_msg["meta"]
         recommands: list[tuple[str, float]] = meta_to_recommend(meta, mjai_bot.is_3p)
@@ -890,6 +937,10 @@ class AkagiApp(App):
         ("z", "help_screen_zh", "Help (中文)"),
     ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.autoplay_mjai_msg: dict | None = None
+
     def on_mount(self) -> None:
         global settings, mjai_controller
         # ============================================= #
@@ -931,6 +982,12 @@ class AkagiApp(App):
             )
             logger.error("No bot selected, please make sure you have bots installed in ./mjai_bot directory")
 
+        # ============================================= #
+        #                    MITM                       #
+        # ============================================= #
+        if not mitm_client.running:
+            self.mitm_start_button_clicked()
+
     def compose(self) -> ComposeResult:
         """
         Create child widgets for the app.
@@ -961,7 +1018,7 @@ class AkagiApp(App):
             Horizontal(
                 Button("MITM\n\nStopped", id="option1_button", variant="default"),
                 Button("Settings", id="option2_button"),
-                Button("Model", id="option3_button"),
+                Button("Model\n&\nAutoplay", id="option3_button"),
                 Button("Logs", id="option4_button"),
                 id="option_container",
             ),
@@ -975,7 +1032,7 @@ class AkagiApp(App):
         Main loop for the application.
         """
         try:
-            global mitm_client, mjai_controller, mjai_bot
+            global mitm_client, mjai_controller, mjai_bot, settings
             if not mitm_client.running:
                 return
             mjai_msgs = mitm_client.dump_messages()
@@ -991,7 +1048,10 @@ class AkagiApp(App):
                 logger.debug(f"<- {mjai_response}")
                 mjai_bot.react(input_list=mjai_msgs)
                 mjai_out_log: RichLog = self.query_one("#mjai_out_log")
-                if mjai_response["type"] != "none" or mjai_bot.can_act:
+                if (
+                    ((mjai_response["type"] != "none" or mjai_bot.can_act   ) and (not mjai_bot.is_3p)) or
+                    ((mjai_response["type"] != "none" or mjai_bot.can_act_3p) and (    mjai_bot.is_3p))
+                ):
                     mjai_out_log.write(mjai_response)
                 # ============================================= #
                 #             Update Widgets and UI             #
@@ -1004,10 +1064,55 @@ class AkagiApp(App):
                 best_action.update_best_action(mjai_response)
                 recommandation: Recommandations = self.query_one("#recommandation")
                 recommandation.update_recommandation(mjai_response)
-
-                logger.debug(f"mjai_response: {mjai_response}")
+                # ============================================= #
+                #             Autoplay and Actions              #
+                # ============================================= #
+                if (
+                    ((mjai_response["type"] != "none" or mjai_bot.can_act   ) and (not mjai_bot.is_3p)) or
+                    ((mjai_response["type"] != "none" or mjai_bot.can_act_3p) and (    mjai_bot.is_3p))
+                ):
+                    if settings.autoplay:
+                        self.set_timer(0.1, partial(self.autoplay, mjai_response))
         except Exception as e:
             logger.error(f"Error in main loop: {traceback.format_exc()}")
+
+    def find_autoplay_window(self) -> None:
+        global settings, autoplay, mitm_client
+        if settings.autoplay:
+            window = autoplay.auto_select_window()
+            if window is not None:
+                logger.info(f"Autoplay window found: {window.name}")
+                self.app.notify(
+                    f"Autoplay window found: {window.name}",
+                    title="Autoplay",
+                    severity="information",
+                )
+            else:
+                logger.warning("No autoplay window found")
+                self.app.notify(
+                    "No autoplay window found, select a target window manually",
+                    title="Autoplay",
+                    severity="warning",
+                )
+
+    def autoplay(self, mjai_response: dict) -> None:
+        """
+        Autoplay function to handle MJAI messages.
+        """
+        global autoplay, mitm_client, mjai_controller
+        if settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou"]:
+            # Amatsuki, Riichi City, Tenhou do not support autoplay
+            logger.warning("Autoplay is not supported for this MJAI type")
+            return
+
+        if (not autoplay.check_window()):
+            self.find_autoplay_window()
+        autoplay.act(mjai_response)
+        if mjai_response["type"] == "reach":
+            mitm_client.messages.put({
+                "type": "reach",
+                "actor": mjai_controller.bot.player_id,
+            })
 
     def action_random_theme(self) -> None:
         """
@@ -1031,7 +1136,7 @@ class AkagiApp(App):
 
     @on(Button.Pressed, "#option1_button")
     def mitm_start_button_clicked(self) -> None:
-        global mitm_client
+        global mitm_client, autoplay, settings
 
         option1_button: Button = self.query_one("#option1_button")
         if mitm_client.running:
@@ -1068,7 +1173,7 @@ def main():
     """
     Main entry point for Akagi.
     """
-    global mitm_client, mjai_controller, mjai_bot, settings
+    global mitm_client, mjai_controller, mjai_bot, settings, autoplay
 
     logger.info("Starting Akagi...")
     logger.info(f"MITM Proxy: {settings.mitm.host}:{settings.mitm.port} ({settings.mitm.type})")
@@ -1076,6 +1181,9 @@ def main():
     logger.info(f"Starting MJAI controller")
     mjai_controller = Controller()
     mjai_bot = AkagiBot()
+    autoplay = AutoPlay()
+    autoplay.set_bot(mjai_bot)
+    autoplay.set_autoplay()
 
     logger.info("Starting App...")
     app = AkagiApp()

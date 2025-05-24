@@ -128,16 +128,6 @@ class AkagiBot(Bot):
         chi_num = int(self.last_kawa_tile[0])
         if (
             self.can_chi_high
-            and f"{chi_num-2}{color}" in self.tehai_mjai
-            and f"{chi_num-1}{color}" in self.tehai_mjai
-        ):
-            consumed = (f"{chi_num-2}{color}", f"{chi_num-1}{color}")
-            chi_candidates.chi_high_meld = (
-                self.last_kawa_tile,
-                consumed,
-            )
-        if (
-            self.can_chi_high
             and f"{chi_num-2}{color}r" in self.tehai_mjai
             and f"{chi_num-1}{color}" in self.tehai_mjai
         ):
@@ -157,12 +147,42 @@ class AkagiBot(Bot):
                 consumed,
             )
         if (
-            self.can_chi_low
-            and f"{chi_num+1}{color}" in self.tehai_mjai
-            and f"{chi_num+2}{color}" in self.tehai_mjai
+            self.can_chi_high
+            and f"{chi_num-2}{color}" in self.tehai_mjai
+            and f"{chi_num-1}{color}" in self.tehai_mjai
         ):
-            consumed = (f"{chi_num+1}{color}", f"{chi_num+2}{color}")
-            chi_candidates.chi_low_meld = (
+            consumed = (f"{chi_num-2}{color}", f"{chi_num-1}{color}")
+            chi_candidates.chi_high_meld = (
+                self.last_kawa_tile,
+                consumed,
+            )
+        if (
+            self.can_chi_mid
+            and f"{chi_num-1}{color}r" in self.tehai_mjai
+            and f"{chi_num+1}{color}" in self.tehai_mjai
+        ):
+            consumed = (f"{chi_num-1}{color}r", f"{chi_num+1}{color}")
+            chi_candidates.chi_mid_meld = (
+                self.last_kawa_tile,
+                consumed,
+            )
+        if (
+            self.can_chi_mid
+            and f"{chi_num-1}{color}" in self.tehai_mjai
+            and f"{chi_num+1}{color}r" in self.tehai_mjai
+        ):
+            consumed = (f"{chi_num-1}{color}", f"{chi_num+1}{color}r")
+            chi_candidates.chi_mid_meld = (
+                self.last_kawa_tile,
+                consumed,
+            )
+        if (
+            self.can_chi_mid
+            and f"{chi_num-1}{color}" in self.tehai_mjai
+            and f"{chi_num+1}{color}" in self.tehai_mjai
+        ):
+            consumed = (f"{chi_num-1}{color}", f"{chi_num+1}{color}")
+            chi_candidates.chi_mid_meld = (
                 self.last_kawa_tile,
                 consumed,
             )
@@ -187,34 +207,140 @@ class AkagiBot(Bot):
                 consumed,
             )
         if (
-            self.can_chi_mid
-            and f"{chi_num-1}{color}" in self.tehai_mjai
+            self.can_chi_low
             and f"{chi_num+1}{color}" in self.tehai_mjai
+            and f"{chi_num+2}{color}" in self.tehai_mjai
         ):
-            consumed = (f"{chi_num-1}{color}", f"{chi_num+1}{color}")
-            chi_candidates.chi_mid_meld = (
-                self.last_kawa_tile,
-                consumed,
-            )
-        if (
-            self.can_chi_mid
-            and f"{chi_num-1}{color}r" in self.tehai_mjai
-            and f"{chi_num+1}{color}" in self.tehai_mjai
-        ):
-            consumed = (f"{chi_num-1}{color}r", f"{chi_num+1}{color}")
-            chi_candidates.chi_mid_meld = (
-                self.last_kawa_tile,
-                consumed,
-            )
-        if (
-            self.can_chi_mid
-            and f"{chi_num-1}{color}" in self.tehai_mjai
-            and f"{chi_num+1}{color}r" in self.tehai_mjai
-        ):
-            consumed = (f"{chi_num-1}{color}", f"{chi_num+1}{color}r")
-            chi_candidates.chi_mid_meld = (
+            consumed = (f"{chi_num+1}{color}", f"{chi_num+2}{color}")
+            chi_candidates.chi_low_meld = (
                 self.last_kawa_tile,
                 consumed,
             )
 
         return chi_candidates
+
+    
+    def find_chi_consume_simple(self) -> list[list[str]]:
+        """
+
+        Examples:
+            >>> bot.find_chi_consume_simple()
+
+        """
+        chi_candidates = []
+
+        color = self.last_kawa_tile[1]
+        chi_num = int(self.last_kawa_tile[0])
+        tehai_mjai = self.tehai_mjai
+        if (
+            self.can_chi_high
+            and f"{chi_num-2}{color}r" in tehai_mjai
+            and f"{chi_num-1}{color}" in tehai_mjai
+        ):
+            consumed = [f"{chi_num-2}{color}r", f"{chi_num-1}{color}"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_high
+            and f"{chi_num-2}{color}" in tehai_mjai
+            and f"{chi_num-1}{color}r" in tehai_mjai
+        ):
+            consumed = [f"{chi_num-2}{color}", f"{chi_num-1}{color}r"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_high
+            and f"{chi_num-2}{color}" in tehai_mjai
+            and f"{chi_num-1}{color}" in tehai_mjai
+        ):
+            consumed = [f"{chi_num-2}{color}", f"{chi_num-1}{color}"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_mid
+            and f"{chi_num-1}{color}r" in tehai_mjai
+            and f"{chi_num+1}{color}" in tehai_mjai
+        ):
+            consumed = [f"{chi_num-1}{color}r", f"{chi_num+1}{color}"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_mid
+            and f"{chi_num-1}{color}" in tehai_mjai
+            and f"{chi_num+1}{color}r" in tehai_mjai
+        ):
+            consumed = [f"{chi_num-1}{color}", f"{chi_num+1}{color}r"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_mid
+            and f"{chi_num-1}{color}" in tehai_mjai
+            and f"{chi_num+1}{color}" in tehai_mjai
+        ):
+            consumed = [f"{chi_num-1}{color}", f"{chi_num+1}{color}"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_low
+            and f"{chi_num+1}{color}r" in tehai_mjai
+            and f"{chi_num+2}{color}" in tehai_mjai
+        ):
+            consumed = [f"{chi_num+1}{color}r", f"{chi_num+2}{color}"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_low
+            and f"{chi_num+1}{color}" in tehai_mjai
+            and f"{chi_num+2}{color}r" in tehai_mjai
+        ):
+            consumed = [f"{chi_num+1}{color}", f"{chi_num+2}{color}r"]
+            chi_candidates.append(consumed)
+        if (
+            self.can_chi_low
+            and f"{chi_num+1}{color}" in tehai_mjai
+            and f"{chi_num+2}{color}" in tehai_mjai
+        ):
+            consumed = [f"{chi_num+1}{color}", f"{chi_num+2}{color}"]
+            chi_candidates.append(consumed)
+
+        return chi_candidates
+
+    def find_pon_consume_simple(self) -> list[list[str]]:
+        """
+        Example:
+            >>> bot.find_pon_consume_simple()
+            [
+                ["5m", "5m"],
+                ["5mr", "5m"],
+            ]
+        """
+        pon_candidates = []
+        if self.last_kawa_tile[0] == "5" and self.last_kawa_tile[1] != "z":
+            if self.tehai_mjai.count(self.last_kawa_tile[:2]) >= 2:
+                consumed = [self.last_kawa_tile[:2], self.last_kawa_tile[:2]]
+                pon_candidates.append(consumed)
+            if (
+                self.tehai_mjai.count(self.last_kawa_tile[:2]) >= 1 and 
+                self.tehai_mjai.count(self.last_kawa_tile[:2] + "r") == 1
+            ):
+                consumed = [
+                    self.last_kawa_tile[:2] + "r",
+                    self.last_kawa_tile[:2],
+                ]
+                pon_candidates.append(consumed)
+            return pon_candidates
+        else:
+            consumed = [
+                self.last_kawa_tile,
+                self.last_kawa_tile,
+            ]
+            pon_candidates.append(consumed)
+        return pon_candidates
+    
+    @property
+    def can_act_3p(self) -> bool:
+        """
+        Check if the bot can act in 3-player mode.
+        """
+        return (
+            self.can_discard or
+            self.can_riichi or
+            self.can_pon or
+            self.can_agari or
+            self.can_ryukyoku or
+            self.can_kan 
+            # self.tehai_vec34[9*3+3] > 0 # nukidora
+        )

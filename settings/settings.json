@@ -11,5 +11,6 @@
         "online": false,
         "api_key": "your_api_key"
     },
+    "autoplay": false,
     "auto_switch_model": true
 }

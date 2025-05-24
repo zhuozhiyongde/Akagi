@@ -37,6 +37,7 @@ class Settings:
     theme: str
     model: str
     ot: OTConfig
+    autoplay: bool
     auto_switch_model: bool
     def update(self, settings: dict) -> None:
         """
@@ -53,6 +54,7 @@ class Settings:
         self.ot.server = settings["ot_server"]["server"]
         self.ot.online = settings["ot_server"]["online"]
         self.ot.api_key = settings["ot_server"]["api_key"]
+        self.autoplay = settings["autoplay"]
         self.auto_switch_model = settings["auto_switch_model"]
         self.save_ot_settings()
 
@@ -102,6 +104,7 @@ class Settings:
                     "online": self.ot.online,
                     "api_key": self.ot.api_key
                 },
+                "autoplay": self.autoplay,
                 "auto_switch_model": self.auto_switch_model
             }, f, indent=4)
         # Save the settings to the file
@@ -149,6 +152,7 @@ def load_settings() -> Settings:
                     "online": False,
                     "api_key": "your_api_key"
                 },
+                "autoplay": False,
                 "auto_switch_model": True
             }, f, indent=4)
         logger.info(f"Created new settings.json with default values")
@@ -178,6 +182,7 @@ def load_settings() -> Settings:
             online=settings["ot_server"]["online"],
             api_key=settings["ot_server"]["api_key"]
         ),
+        autoplay=settings["autoplay"],
         auto_switch_model=settings["auto_switch_model"]
     )
 

@@ -28,6 +28,7 @@ class GameStatus:
         self.accept_reach = None
         self.game_start = False
         self.shift = 0
+        self.classify_id = None
 
         self.is_3p = False
 
@@ -111,6 +112,12 @@ class RiichiCityBridge(BridgeBase):
                 #     -> start_game
                 # =============================================================== #
                 case "cmd_enter_room":
+                    # Might get multiple cmd_enter_room messages in one game.
+                    if self.game_status.classify_id is not None:
+                        if self.game_status.classify_id == rc_msg.msg_data["data"]["options"]["classify_id"]:
+                            logger.warning(f"Already in room {self.game_status.classify_id}")
+                            return
+                    self.game_status = GameStatus()
                     self.game_status.game_start = True
                     players = rc_msg.msg_data["data"]["players"]
                     if rc_msg.msg_data["data"]["options"]["player_count"] == 3:

@@ -105,6 +105,9 @@ class AmatsukiBridge(BridgeBase):
         # This is used to store the temp_start_round command temporarily
         # until the dora indicator is received
         self.temp_start_round: dict = None
+        # temp reach accepted command
+        # reach accepted command is made after confirming that no one has pon chi
+        self.temp_reach_accepted: dict = None
         # Current dora count
         # When the dora indicator is received, this will be incremented
         self.current_dora_count: int = 1
@@ -295,7 +298,12 @@ class AmatsukiBridge(BridgeBase):
                         pai: str = "?"
                         if content_dict["position"] == self.seat:
                             pai = ID_TO_MJAI_PAI[content_dict["hai"]["id"]]
-                        return [{"type": "tsumo", "actor": actor, "pai": pai}]
+                        ret = []
+                        if self.temp_reach_accepted:
+                            ret.append(self.temp_reach_accepted)
+                            self.temp_reach_accepted = None
+                        ret.append({"type": "tsumo", "actor": actor, "pai": pai})
+                        return ret
                     # ============================================================== #
                     #                         Tehai Action                           #
                     # ============================================================== #
@@ -344,8 +352,10 @@ class AmatsukiBridge(BridgeBase):
                             if pai in ["5m", "5p", "5s"]:
                                 consumed = [pai]*3
                                 consumed[0] += "r"
-                            if pai in ["5mr", "5pr", "5sr"]:
+                            elif pai in ["5mr", "5pr", "5sr"]:
                                 consumed = [pai[:-1]]*3
+                            else:
+                                consumed = [pai]*3
                             return [{
                                 "type": "kakan",
                                 "actor": actor,
@@ -359,11 +369,11 @@ class AmatsukiBridge(BridgeBase):
                             actor: int = content_dict["position"]
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
                             tsumogiri: bool = content_dict["isKiri"]
-                            # TODO: This will have problem when can_chi or can_pon to the reach pai.
+                            self.temp_reach_accepted = {"type": "reach_accepted", "actor": actor}
+                            self.last_discard_actor = actor
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": tsumogiri},
-                                {"type": "reach_accepted", "actor": actor}
                             ]
                         # ============================================================== #
                         #                           WReach                               #
@@ -371,10 +381,11 @@ class AmatsukiBridge(BridgeBase):
                         if content_dict["action"] == "WREACH":
                             actor: int = content_dict["position"]
                             pai: str = ID_TO_MJAI_PAI[content_dict["haiList"][0]["id"]]
+                            self.temp_reach_accepted = {"type": "reach_accepted", "actor": actor}
+                            self.last_discard_actor = actor
                             return [
                                 {"type": "reach", "actor": actor},
                                 {"type": "dahai", "actor": actor, "pai": pai, "tsumogiri": True},
-                                {"type": "reach_accepted", "actor": actor}
                             ]
                         # ============================================================== #
                         #                          NukiDora                              #
@@ -418,13 +429,18 @@ class AmatsukiBridge(BridgeBase):
                                     skip_pai = False
                                     continue
                                 consumed.append(pai)
-                            return [{
+                            ret = []
+                            if self.temp_reach_accepted:
+                                ret.append(self.temp_reach_accepted)
+                                self.temp_reach_accepted = None
+                            ret.append({
                                 "type": "chi",
                                 "actor": actor,
                                 "target": target,
                                 "pai": pai,
                                 "consumed": consumed
-                            }]
+                            })
+                            return ret
                         # ============================================================== #
                         #                            Pon                                 #
                         # ============================================================== #
@@ -440,13 +456,18 @@ class AmatsukiBridge(BridgeBase):
                                     skip_pai = False
                                     continue
                                 consumed.append(pai)
-                            return [{
+                            ret = []
+                            if self.temp_reach_accepted:
+                                ret.append(self.temp_reach_accepted)
+                                self.temp_reach_accepted = None
+                            ret.append({
                                 "type": "pon",
                                 "actor": actor,
                                 "target": target,
                                 "pai": pai,
                                 "consumed": consumed
-                            }]
+                            })
+                            return ret
                         # ============================================================== #
                         #                          Daiminkan                             #
                         # ============================================================== #
@@ -462,13 +483,18 @@ class AmatsukiBridge(BridgeBase):
                                     skip_pai = False
                                     continue
                                 consumed.append(pai)
-                            return [{
+                            ret = []
+                            if self.temp_reach_accepted:
+                                ret.append(self.temp_reach_accepted)
+                                self.temp_reach_accepted = None
+                            ret.append({
                                 "type": "daiminkan",
                                 "actor": actor,
                                 "target": target,
                                 "pai": pai,
                                 "consumed": consumed
-                            }]
+                            })
+                            return ret
                     # ============================================================== #
                     #                              Ron                               #
                     # ============================================================== #
@@ -484,6 +510,8 @@ class AmatsukiBridge(BridgeBase):
                         ]):
                             logger.error(f"Invalid content: {stomp.content}")
                             return None
+                        if self.temp_reach_accepted:
+                            self.temp_reach_accepted = None
                         return [{
                             "type": "end_kyoku"
                         }] # Ron                    
@@ -502,6 +530,8 @@ class AmatsukiBridge(BridgeBase):
                         ]):
                             logger.error(f"Invalid content: {stomp.content}")
                             return None
+                        if self.temp_reach_accepted:
+                            self.temp_reach_accepted = None
                         return [{
                             "type": "end_kyoku"
                         }]
@@ -520,6 +550,8 @@ class AmatsukiBridge(BridgeBase):
                         ]):
                             logger.error(f"Invalid content: {stomp.content}")
                             return None
+                        if self.temp_reach_accepted:
+                            self.temp_reach_accepted = None
                         return [{
                             "type": "end_game",
                         }]
