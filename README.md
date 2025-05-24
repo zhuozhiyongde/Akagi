@@ -218,6 +218,15 @@ logs are saved in `./logs/` folder.
 Click on the MJAI Info window to change kind of info you want to see.
 ![image](./docs/gifs/change_window.gif)
 
+#### AutoPlay:
+> [!NOTE]
+> AutoPlay is only available on Windows Release version when ot_server is running.
+
+Make sure you have set the display of the game client to 16:9 aspect ratio.
+![image](./docs/images/autoplay_example/good.png)
+![image](./docs/images/autoplay_example/bad_1.png)
+![image](./docs/images/autoplay_example/bad_2.png)
+
 #### Changing theme:
 ![image](./docs/gifs/change_theme.gif)
 

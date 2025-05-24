@@ -214,6 +214,15 @@
 點選該視窗即可切換
 ![image](./docs/gifs/change_window.gif)
 
+#### AutoPlay:
+> [!NOTE]
+> AutoPlay 僅在 Windows Release 版中啟用，且必須啟動 ot_server。
+
+確保遊戲用戶端的顯示比例設定為 16:9
+![image](./docs/images/autoplay_example/good.png)
+![image](./docs/images/autoplay_example/bad_1.png)
+![image](./docs/images/autoplay_example/bad_2.png)
+
 #### 更換主題：
 ![image](./docs/gifs/change_theme.gif)
 
