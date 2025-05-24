@@ -1100,6 +1100,11 @@ class AkagiApp(App):
         Autoplay function to handle MJAI messages.
         """
         global autoplay, mitm_client, mjai_controller
+        if settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou"]:
+            # Amatsuki, Riichi City, Tenhou do not support autoplay
+            logger.warning("Autoplay is not supported for this MJAI type")
+            return
+
         if (not autoplay.check_window()):
             self.find_autoplay_window()
         autoplay.act(mjai_response)
