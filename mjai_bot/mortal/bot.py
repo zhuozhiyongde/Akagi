@@ -97,6 +97,8 @@ class Bot:
                     }
                 }
                 return_action = json.dumps(raw_data, separators=(",", ":"))
+            else:
+                return_action = json.dumps({"type":"none"}, separators=(",", ":"))
             # ==================================== #
             return return_action
         else:
