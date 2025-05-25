@@ -1107,7 +1107,23 @@ class AkagiApp(App):
 
         if (not autoplay.check_window()):
             self.find_autoplay_window()
-        autoplay.act(mjai_response)
+        try:
+            act_result = autoplay.act(mjai_response)
+            if not act_result:
+                logger.warning("Action not preformed.")
+                self.app.notify(
+                    "Action not preformed, please check the logs.",
+                    title="Autoplay Warning",
+                    severity="warning",
+                )
+        except Exception as e:
+            logger.error(f"Error in autoplay: {traceback.format_exc()}")
+            self.app.notify(
+                f"Error in autoplay: {e}",
+                title="Autoplay Error",
+                severity="error",
+            )
+            return
         if mjai_response["type"] == "reach":
             mitm_client.messages.put({
                 "type": "reach",
