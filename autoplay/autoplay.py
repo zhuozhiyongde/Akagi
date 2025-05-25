@@ -69,8 +69,8 @@ class AutoPlay(object):
         Automatically selects the window based on the current settings.
         """
         pass
-    
-    def act(self, mjai_msg: dict):
+
+    def act(self, mjai_msg: dict) -> bool:
         """
         Given a MJAI message, this method processes the message and performs the corresponding action.
 
@@ -78,6 +78,6 @@ class AutoPlay(object):
             mjai_msg (dict): The MJAI message to process.
 
         Returns:
-            None: No return value.
+            bool: True if the action was performed, False otherwise.
         """
-        pass
+        return False
