@@ -1,0 +1,9 @@
+{
+    "mitm": {
+        "type": "majsoul",
+        "host": "127.0.0.1",
+        "port": 7880
+    },
+    "model": "mortal",
+    "auto_switch_model": true
+}

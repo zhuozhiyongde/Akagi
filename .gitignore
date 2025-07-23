@@ -1,0 +1,9 @@
+venv
+__pycache__
+
+dist
+logs/*.log
+
+docker
+compile
+vendor
