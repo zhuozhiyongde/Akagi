@@ -99,13 +99,13 @@ def load_settings() -> Settings:
             json.dump({
                 "mitm": {
                     "type": "majsoul",
-                    "host": "127.0.0.1",
+                    "host": "0.0.0.0",
                     "port": 7880
                 },
                 "model": "mortal",
                 "auto_switch_model": True,
                 "frontend": {
-                    "host": "localhost",
+                    "host": "frontend-serve",
                     "port": 3001
                 }
             }, f, indent=4)
