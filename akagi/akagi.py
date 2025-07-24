@@ -113,7 +113,7 @@ class AkagiApp:
                 },
             }
 
-            requests.post("http://localhost:3333/update", json=payload, timeout=0.5)
+            requests.post(f"http://{settings.frontend.host}:{settings.frontend.port}/update", json=payload, timeout=0.5)
             logger.debug(f"Sent recommendation to frontend: {payload}")
         except Exception:
             logger.error(f"Error sending recommendation to frontend: {traceback.format_exc()}")

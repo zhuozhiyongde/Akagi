@@ -28,6 +28,7 @@ class MITMConfig(ServiceConfig):
 @dataclasses.dataclass
 class Settings:
     mitm: MITMConfig
+    frontend: ServiceConfig
     model: str
     auto_switch_model: bool
     def update(self, settings: dict) -> None:
@@ -40,6 +41,8 @@ class Settings:
         self.mitm.host = settings["mitm"]["host"]
         self.mitm.port = settings["mitm"]["port"]
         self.mitm.type = MITMType(settings["mitm"]["type"])
+        self.frontend.host = settings["frontend"]["host"]
+        self.frontend.port = settings["frontend"]["port"]
         self.model = settings["model"]
         self.auto_switch_model = settings["auto_switch_model"]
 
@@ -53,6 +56,10 @@ class Settings:
                     "type": self.mitm.type.value,
                     "host": self.mitm.host,
                     "port": self.mitm.port
+                },
+                "frontend": {
+                    "host": self.frontend.host,
+                    "port": self.frontend.port
                 },
                 "model": self.model,
                 "auto_switch_model": self.auto_switch_model
@@ -96,7 +103,11 @@ def load_settings() -> Settings:
                     "port": 7880
                 },
                 "model": "mortal",
-                "auto_switch_model": True
+                "auto_switch_model": True,
+                "frontend": {
+                    "host": "localhost",
+                    "port": 3001
+                }
             }, f, indent=4)
         logger.info(f"Created new settings.json with default values")
         # Load settings again
@@ -117,6 +128,10 @@ def load_settings() -> Settings:
             host=settings["mitm"]["host"],
             port=settings["mitm"]["port"],
             type=MITMType(settings["mitm"]["type"])
+        ),
+        frontend=ServiceConfig(
+            host=settings.get("frontend", {}).get("host", "localhost"),
+            port=settings.get("frontend", {}).get("port", 3001)
         ),
         model=settings["model"],
         auto_switch_model=settings["auto_switch_model"]

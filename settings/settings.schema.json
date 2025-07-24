@@ -60,6 +60,21 @@
     "auto_switch_model": {
       "type": "boolean",
       "description": "Whether to automatically switch the model based on the game."
+    },
+    "frontend": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "host",
+        "port"
+      ]
     }
   },
   "required": ["mitm", "model", "auto_switch_model"],
