@@ -79,6 +79,7 @@ class AkagiApp:
 
             for r in recommendations:
                 action, confidence = r
+                confidence = float(confidence)
                 rec_data = {"action": action, "confidence": confidence}
 
                 if action in ("chi_low", "chi_mid", "chi_high"):
@@ -113,8 +114,9 @@ class AkagiApp:
                 },
             }
 
-            requests.post(f"http://{settings.frontend.host}:{settings.frontend.port}/update", json=payload, timeout=0.5)
-            logger.debug(f"Sent recommendation to frontend: {payload}")
+            logger.debug(f"Sending recommendation to http://{settings.frontend.host}:{settings.frontend.port}:\n{payload}")
+            res = requests.post(f"http://{settings.frontend.host}:{settings.frontend.port}/update", json=payload, timeout=1, proxies={"http":None, "https":None})
+            res.raise_for_status()
         except Exception:
             logger.error(f"Error sending recommendation to frontend: {traceback.format_exc()}")
 
