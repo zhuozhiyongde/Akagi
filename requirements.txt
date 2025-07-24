@@ -1,0 +1,13 @@
+# Basic
+mjai==0.2.1
+mitmproxy==11.1.2
+loguru==0.7.3
+requests==2.32.3
+jsonschema==4.23.0
+aiohttp==3.12.14
+protobuf==5.29.3
+
+# PyTorch
+torch==2.5.1
+numpy==2.1.2
+

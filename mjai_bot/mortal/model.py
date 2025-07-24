@@ -387,7 +387,7 @@ def load_model(seat: int) -> Bot:
 
     mortal = Brain(version=4, conv_channels=192, num_blocks=40).eval()
     dqn = DQN(version=4).eval()
-    state = torch.load(control_state_file, map_location=torch.device('cpu'), weights_only=True)
+    state = torch.load(control_state_file, map_location=torch.device('cpu'))
     mortal.load_state_dict(state['mortal'])
     dqn.load_state_dict(state['current_dqn'])
 
