@@ -6,6 +6,7 @@ import sys
 import time
 import traceback
 import requests
+import asyncio
 from threading import Thread
 
 from .logger import logger
@@ -14,9 +15,11 @@ from mitm.client import Client
 from mjai_bot.bot import AkagiBot
 from mjai_bot.controller import Controller
 from settings.settings import settings
+from dataserver.dataserver import DataServer
 
 # Global variables
 mitm_client: Client = None
+dataserver_client: DataServer = None
 mjai_controller: Controller = None
 mjai_bot: AkagiBot = None
 
@@ -66,13 +69,16 @@ class AkagiApp:
         meta = mjai_msg["meta"]
         recommands: list[tuple[str, float]] = meta_to_recommend(meta, mjai_bot.is_3p)
         
-        thread = Thread(target=self.send_to_frontend, args=(recommands, mjai_bot))
-        thread.start()
+        global dataserver_client
+        if dataserver_client and dataserver_client.running:
+            thread = Thread(target=self.send_to_frontend, args=(recommands, mjai_bot))
+            thread.start()
 
     def send_to_frontend(self, recommendations: list[tuple[str, float]], bot: AkagiBot):
         """
-        Formats and sends recommendation data to the frontend server.
+        Formats and sends recommendation data to the DataServer.
         """
+        global dataserver_client
         try:
             formatted_data = []
             last_kawa_tile = bot.last_kawa_tile
@@ -113,45 +119,49 @@ class AkagiApp:
                     "last_kawa_tile": bot.last_kawa_tile,
                 },
             }
+            
+            logger.info("Updating data in DataServer.")
+            dataserver_client.update_data(payload)
 
-            logger.debug(f"Sending recommendation to http://{settings.frontend.host}:{settings.frontend.port}:\n{payload}")
-            username = os.environ.get('AKAGI_AUTH_USERNAME')
-            password = os.environ.get('AKAGI_AUTH_PASSWORD')
-            auth = (username, password) if username and password else None
-            res = requests.post(f"http://{settings.frontend.host}:{settings.frontend.port}/update", json=payload, timeout=1, proxies={}, auth=auth)
-            res.raise_for_status()
         except Exception:
-            logger.error(f"Error sending recommendation to frontend: {traceback.format_exc()}")
+            logger.error(f"Error sending recommendation to DataServer: {traceback.format_exc()}")
 
 
+
+async def start_dataserver(server):
+    await server.start()
 
 def main():
     """
     Main entry point for Akagi.
     Initializes components and runs the main loop.
     """
-    global mitm_client, mjai_controller, mjai_bot, settings
-
-    logger.info("Starting Akagi...")
-    logger.info(f"MITM Proxy: {settings.mitm.host}:{settings.mitm.port} ({settings.mitm.type})")
-    
-    mitm_client = Client()
-    mjai_controller = Controller()
-    mjai_bot = AkagiBot()
-
-    logger.info("Starting Akagi main loop...")
-    app = AkagiApp()
-    
-    if not mitm_client.running:
-        mitm_client.start()
+    global mitm_client, dataserver_client, mjai_controller, mjai_bot, settings
 
     try:
+        logger.info("Starting Akagi...")
+        
+        dataserver_client = DataServer()
+        dataserver_client.start()
+
+        logger.info(f"MITM Proxy: {settings.mitm.host}:{settings.mitm.port} ({settings.mitm.type})")
+        mitm_client = Client()
+        mitm_client.start()
+
+        mjai_controller = Controller()
+        mjai_bot = AkagiBot()
+
+        logger.info("Starting Akagi main loop...")
+        app = AkagiApp()
+        
         while True:
             app.main_loop()
             time.sleep(1 / 20)
     except KeyboardInterrupt:
         logger.info("Stopping Akagi...")
     finally:
+        if dataserver_client and dataserver_client.running:
+            dataserver_client.stop()
         if mitm_client and mitm_client.running:
             mitm_client.stop()
         logger.info("Akagi stopped")
