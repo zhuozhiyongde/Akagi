@@ -104,10 +104,6 @@ def load_settings() -> Settings:
                 },
                 "model": "mortal",
                 "auto_switch_model": True,
-                "frontend": {
-                    "host": "frontend-serve",
-                    "port": 3001
-                }
             }, f, indent=4)
         logger.info(f"Created new settings.json with default values")
         # Load settings again
