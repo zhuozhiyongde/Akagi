@@ -115,7 +115,10 @@ class AkagiApp:
             }
 
             logger.debug(f"Sending recommendation to http://{settings.frontend.host}:{settings.frontend.port}:\n{payload}")
-            res = requests.post(f"http://{settings.frontend.host}:{settings.frontend.port}/update", json=payload, timeout=1, proxies={"http":None, "https":None})
+            username = os.environ.get('AKAGI_AUTH_USERNAME')
+            password = os.environ.get('AKAGI_AUTH_PASSWORD')
+            auth = (username, password) if username and password else None
+            res = requests.post(f"http://{settings.frontend.host}:{settings.frontend.port}/update", json=payload, timeout=1, proxies={}, auth=auth)
             res.raise_for_status()
         except Exception:
             logger.error(f"Error sending recommendation to frontend: {traceback.format_exc()}")

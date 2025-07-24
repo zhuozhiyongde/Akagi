@@ -5,7 +5,7 @@
         "port": 7880
     },
     "frontend": {
-        "host": "frontend-serve",
+        "host": "server",
         "port": 3001
     },
     "model": "mortal",
