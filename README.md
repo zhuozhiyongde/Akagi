@@ -1,6 +1,6 @@
 # Akagi
 
-本项目是 [Akagi](https://github.com/shinkuan/Akagi) 的一个修改版，主要为了适配 [Majsoul Helper](https://github.com/zhuozhiyongde/majsoul-helper) 项目的容器化部署。
+本项目是 [Akagi](https://github.com/shinkuan/Akagi) 的一个修改版，主要为了适配 [Majsoul Helper](https://github.com/zhuozhiyongde/MajsoulHelper) 项目的容器化部署。
 
 原版 Akagi 是一个功能强大的雀魂 AI，提供了 TUI 界面。本版本进行了一些核心修改，使其能够作为后端服务运行。
 
