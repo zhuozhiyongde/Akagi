@@ -25,7 +25,7 @@ class UnifiedBridge(BridgeBase):
         self.game_type: GameType = GameType.UNKNOWN
         self.bridge = None
 
-    def parse(self, content: bytes) -> None | list[dict]:
+    def parse(self, content: bytes, from_client: bool = False) -> None | list[dict]:
         logger.debug(f"<- {content}")
         if self.game_type == GameType.UNKNOWN:
             if self.is_amatsuki(content):
@@ -48,6 +48,8 @@ class UnifiedBridge(BridgeBase):
             return None
         try:
             parsed_content = self.bridge.parse(content)
+            if self.game_type == GameType.TENHOU and from_client:
+                return None  # Tenhou bridge needs to filter out client messages
             if parsed_content is not None:
                 logger.debug(f"-> {parsed_content}")
             return parsed_content
