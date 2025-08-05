@@ -8,7 +8,7 @@
         "type": {
           "type": "string",
           "description": "The type of MITM service to use.",
-          "enum": ["amatsuki", "majsoul", "riichi_city", "tenhou"]
+          "enum": ["amatsuki", "majsoul", "riichi_city", "tenhou", "unified"]
         },
         "host": {
           "type": "string",

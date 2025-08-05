@@ -47,6 +47,11 @@ class Client(object):
                 self._thread = threading.Thread(target=lambda: asyncio.run(start_proxy(settings.mitm.host, settings.mitm.port)))
                 self._thread.start()
                 self.messages = mjai_messages
+            case MITMType.UNIFIED:
+                from mitm.unified import start_proxy, mjai_messages
+                self._thread = threading.Thread(target=lambda: asyncio.run(start_proxy(settings.mitm.host, settings.mitm.port)))
+                self._thread.start()
+                self.messages = mjai_messages
             case _:
                 raise ValueError(f"Unknown MITM type: {settings.mitm.type}")
         self.running = True
@@ -66,6 +71,9 @@ class Client(object):
                 stop_proxy()
             case MITMType.TENHOU:
                 from mitm.tenhou import stop_proxy
+                stop_proxy()
+            case MITMType.UNIFIED:
+                from mitm.unified import stop_proxy
                 stop_proxy()
             case _:
                 raise ValueError(f"Unknown MITM type: {settings.mitm.type}")

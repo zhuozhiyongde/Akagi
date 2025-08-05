@@ -40,6 +40,8 @@ class AutoPlay(object):
                 return
             case MITMType.TENHOU:
                 return
+            case MITMType.UNIFIED:
+                return
             case _:
                 logger.error(f"Unknown MITM type: {settings.mitm.type}")
                 return
@@ -80,4 +82,4 @@ class AutoPlay(object):
         Returns:
             bool: True if the action was performed, False otherwise.
         """
-        return False
+        pass
