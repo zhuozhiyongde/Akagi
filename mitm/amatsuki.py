@@ -14,7 +14,7 @@ from .logger import logger
 
 activated_flows: list[str] = [] # store all flow.id ([-1] is the recently opened)
 mjai_messages: queue.Queue[dict] = queue.Queue() # store all messages
-amaruki_bridges: dict[str, AmatsukiBridge] = dict() # flow.id -> AmatsukiBridge
+amatsuki_bridges: dict[str, AmatsukiBridge] = dict() # flow.id -> AmatsukiBridge
 
 
 class ClientWebSocket(ClientWebSocketABC):
@@ -23,22 +23,22 @@ class ClientWebSocket(ClientWebSocketABC):
 
     def websocket_start(self, flow: mitmproxy.http.HTTPFlow):
         assert isinstance(flow.websocket, mitmproxy.websocket.WebSocketData)
-        global activated_flows, mjai_messages, amaruki_bridges
+        global activated_flows, mjai_messages, amatsuki_bridges
         logger.info(f"WebSocket connection opened: {flow.id}")
         
         activated_flows.append(flow.id)
-        amaruki_bridges[flow.id] = AmatsukiBridge()
+        amatsuki_bridges[flow.id] = AmatsukiBridge()
 
     def websocket_message(self, flow: mitmproxy.http.HTTPFlow):
         assert isinstance(flow.websocket, mitmproxy.websocket.WebSocketData)
-        global activated_flows,mjai_messages, amaruki_bridges
+        global activated_flows,mjai_messages, amatsuki_bridges
         if flow.id in activated_flows:
             msg = flow.websocket.messages[-1]
             if msg.from_client:
                 logger.debug(f"<- Message: {msg.content}")
             else: # from server
                 logger.debug(f"-> Message: {msg.content}")
-            mjai_msg = amaruki_bridges[flow.id].parse(msg.content)
+            mjai_msg = amatsuki_bridges[flow.id].parse(msg.content)
             if mjai_msg:
                 for msg in mjai_msg:
                     logger.info(f"<- MJAI Message: {msg}")
@@ -47,11 +47,11 @@ class ClientWebSocket(ClientWebSocketABC):
             logger.error(f"WebSocket message received from unactivated flow: {flow.id}")
 
     def websocket_end(self, flow: mitmproxy.http.HTTPFlow):
-        global activated_flows, mjai_messages, amaruki_bridges
+        global activated_flows, mjai_messages, amatsuki_bridges
         if flow.id in activated_flows:
             logger.info(f"WebSocket connection closed: {flow.id}")
             activated_flows.remove(flow.id)
-            amaruki_bridges.pop(flow.id)
+            amatsuki_bridges.pop(flow.id)
         else:
             logger.error(f"WebSocket connection closed from unactivated flow: {flow.id}")
 
