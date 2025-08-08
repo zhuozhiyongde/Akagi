@@ -257,7 +257,7 @@ class SettingsScreen(Screen):
                     severity="information",
                 )
             if settings.autoplay:
-                if settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou", "unified"]:
+                if settings.mitm.type.value in ["riichi_city", "tenhou", "unified"]:
                     self.app.notify(
                         f"Autoplay does not support {settings.mitm.type.value} yet, please disable it.",
                         title="Autoplay Warning",
@@ -1100,8 +1100,8 @@ class AkagiApp(App):
         Autoplay function to handle MJAI messages.
         """
         global autoplay, mitm_client, mjai_controller
-        if settings.mitm.type.value in ["amatsuki", "riichi_city", "tenhou", "unified"]:
-            # Amatsuki, Riichi City, Tenhou do not support autoplay
+        if settings.mitm.type.value in ["riichi_city", "tenhou", "unified"]:
+            # Riichi City, Tenhou do not support autoplay
             logger.warning("Autoplay is not supported for this MJAI type")
             return
 
