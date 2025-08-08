@@ -101,7 +101,7 @@
 | __Majsoul__    | &check;       | &check;        | *&check; |
 | __Tenhou__     | &check;       | &check;        |  &cross; |
 | __RiichiCity__ | &check;       | &check;        |  &cross; |
-| __Amatsuki__   | &check;       | &check;        |  &cross; |
+| __Amatsuki__   | &check;       | &check;        | *&check; |
 
 *AutoPlay only avaliable on [Windows Release version](https://github.com/shinkuan/Akagi/releases) when ot_server is running.
 

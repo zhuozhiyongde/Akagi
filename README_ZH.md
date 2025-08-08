@@ -94,7 +94,7 @@
 | __雀魂__      | &check;       | &check;        | *&check; |
 | __天鳳__      | &check;       | &check;        |  &cross; |
 | __麻雀一番街__ | &check;       | &check;        |  &cross; |
-| __天月__      | &check;       | &check;        |  &cross; |
+| __天月__      | &check;       | &check;        | *&check |
 
 *自動打牌僅支援[Windows Release版](https://github.com/shinkuan/Akagi/releases)，且ot_server必須啟用。
 
