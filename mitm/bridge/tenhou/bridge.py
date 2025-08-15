@@ -461,7 +461,7 @@ Tenhou message format:
         # Rotate scores to the player's seat
         scores = scores[-self.state.seat:] + scores[:-self.state.seat]
         mjai_messages = [
-            {'type': 'hora', 'scores': scores},
+            # {'type': 'hora', 'scores': scores},
             {'type': 'end_kyoku'}
         ]
         
