@@ -477,17 +477,20 @@ Tenhou message format:
         return mjai_messages
     
     def _convert_end_game(self, message: dict) -> list[dict] | None:
-        scores = parse_sc_tag(message)
+        # scores = parse_sc_tag(message)
+        # mjai_messages = []
+
+        # if message['tag'] == 'AGARI':
+        #     mjai_messages.append({'type': 'hora', 'scores': scores})
+        # else:
+        #     mjai_messages.append({'type': 'ryukyoku', 'scores': scores})
+
+        # mjai_messages.append({'type': 'end_kyoku'})
+        # scores = parse_owari_tag(message)
+        # mjai_messages.append({'type': 'end_game', 'scores': scores})
+
         mjai_messages = []
-
-        if message['tag'] == 'AGARI':
-            mjai_messages.append({'type': 'hora', 'scores': scores})
-        else:
-            mjai_messages.append({'type': 'ryukyoku', 'scores': scores})
-
-        mjai_messages.append({'type': 'end_kyoku'})
-        scores = parse_owari_tag(message)
-        mjai_messages.append({'type': 'end_game', 'scores': scores})
+        mjai_messages.append({'type': 'end_game'})
 
         return mjai_messages
 
