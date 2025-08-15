@@ -395,7 +395,7 @@ Tenhou message format:
         if meld.meld_type == Meld.CHI:
             target = (actor - 1) % 4
         else:
-            target = self.rel_to_abs(meld.target % 4)
+            target = (actor + meld.target) % 4
 
         mjai_messages = [{
             'type': meld.meld_type,
