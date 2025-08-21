@@ -395,7 +395,7 @@ Tenhou message format:
         if meld.meld_type == Meld.CHI:
             target = (actor - 1) % 4
         else:
-            target = self.rel_to_abs(meld.target % 4)
+            target = (actor + meld.target) % 4
 
         mjai_messages = [{
             'type': meld.meld_type,
@@ -461,7 +461,7 @@ Tenhou message format:
         # Rotate scores to the player's seat
         scores = scores[-self.state.seat:] + scores[:-self.state.seat]
         mjai_messages = [
-            {'type': 'hora', 'scores': scores},
+            # {'type': 'hora', 'scores': scores},
             {'type': 'end_kyoku'}
         ]
         
@@ -477,17 +477,20 @@ Tenhou message format:
         return mjai_messages
     
     def _convert_end_game(self, message: dict) -> list[dict] | None:
-        scores = parse_sc_tag(message)
+        # scores = parse_sc_tag(message)
+        # mjai_messages = []
+
+        # if message['tag'] == 'AGARI':
+        #     mjai_messages.append({'type': 'hora', 'scores': scores})
+        # else:
+        #     mjai_messages.append({'type': 'ryukyoku', 'scores': scores})
+
+        # mjai_messages.append({'type': 'end_kyoku'})
+        # scores = parse_owari_tag(message)
+        # mjai_messages.append({'type': 'end_game', 'scores': scores})
+
         mjai_messages = []
-
-        if message['tag'] == 'AGARI':
-            mjai_messages.append({'type': 'hora', 'scores': scores})
-        else:
-            mjai_messages.append({'type': 'ryukyoku', 'scores': scores})
-
-        mjai_messages.append({'type': 'end_kyoku'})
-        scores = parse_owari_tag(message)
-        mjai_messages.append({'type': 'end_game', 'scores': scores})
+        mjai_messages.append({'type': 'end_game'})
 
         return mjai_messages
 
