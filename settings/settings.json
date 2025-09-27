@@ -12,5 +12,12 @@
         "api_key": "your_api_key"
     },
     "autoplay": false,
-    "auto_switch_model": true
+    "auto_switch_model": true,
+    "autoplay_time": {
+        "first_tile": 5.0,
+        "rand_min": 1.0,
+        "rand_max": 3.0,
+        "candidate": 0.5
+    },
+    "recommendation_temperature": 0.3
 }

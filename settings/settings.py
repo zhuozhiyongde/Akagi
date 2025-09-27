@@ -33,6 +33,13 @@ class OTConfig:
     api_key: str
 
 @dataclasses.dataclass
+class AutoplayTimeConfig:
+    first_tile: float
+    rand_min: float
+    rand_max: float
+    candidate: float
+
+@dataclasses.dataclass
 class Settings:
     mitm: MITMConfig
     theme: str
@@ -40,6 +47,8 @@ class Settings:
     ot: OTConfig
     autoplay: bool
     auto_switch_model: bool
+    autoplay_time: AutoplayTimeConfig
+    recommendation_temperature: float
     def update(self, settings: dict) -> None:
         """
         Update settings from a dictionary
@@ -57,6 +66,13 @@ class Settings:
         self.ot.api_key = settings["ot_server"]["api_key"]
         self.autoplay = settings["autoplay"]
         self.auto_switch_model = settings["auto_switch_model"]
+        self.autoplay_time = AutoplayTimeConfig(
+            first_tile=settings["autoplay_time"]["first_tile"],
+            rand_min=settings["autoplay_time"]["rand_min"],
+            rand_max=settings["autoplay_time"]["rand_max"],
+            candidate=settings["autoplay_time"]["candidate"]
+        )
+        self.recommendation_temperature = settings["recommendation_temperature"]
         self.save_ot_settings()
 
     def save_ot_settings(self) -> None:
@@ -106,7 +122,14 @@ class Settings:
                     "api_key": self.ot.api_key
                 },
                 "autoplay": self.autoplay,
-                "auto_switch_model": self.auto_switch_model
+                "auto_switch_model": self.auto_switch_model,
+                "autoplay_time": {
+                    "first_tile": self.autoplay_time.first_tile,
+                    "rand_min": self.autoplay_time.rand_min,
+                    "rand_max": self.autoplay_time.rand_max,
+                    "candidate": self.autoplay_time.candidate
+                },
+                "recommendation_temperature": self.recommendation_temperature
             }, f, indent=4)
         # Save the settings to the file
         logger.info(f"Saved settings to {FILE_PATH / 'settings.json'}")
@@ -154,7 +177,14 @@ def load_settings() -> Settings:
                     "api_key": "your_api_key"
                 },
                 "autoplay": False,
-                "auto_switch_model": True
+                "auto_switch_model": True,
+                "autoplay_time": {
+                    "first_tile": 5,
+                    "rand_min": 1,
+                    "rand_max": 3,
+                    "candidate": 0.5
+                },
+                "recommendation_temperature": 0.3
             }, f, indent=4)
         logger.info(f"Created new settings.json with default values")
         # Load settings again
@@ -184,7 +214,14 @@ def load_settings() -> Settings:
             api_key=settings["ot_server"]["api_key"]
         ),
         autoplay=settings["autoplay"],
-        auto_switch_model=settings["auto_switch_model"]
+        auto_switch_model=settings["auto_switch_model"],
+        autoplay_time=AutoplayTimeConfig(
+            first_tile=settings["autoplay_time"]["first_tile"],
+            rand_min=settings["autoplay_time"]["rand_min"],
+            rand_max=settings["autoplay_time"]["rand_max"],
+            candidate=settings["autoplay_time"]["candidate"]
+        ),
+        recommendation_temperature=settings["recommendation_temperature"]
     )
 
 def get_schema() -> dict:

@@ -60,9 +60,37 @@
     "auto_switch_model": {
       "type": "boolean",
       "description": "Whether to automatically switch the model based on the game."
+    },
+    "autoplay_time": {
+      "type": "object",
+      "description": "Timing settings for autoplay actions.",
+      "properties": {
+        "first_tile": {
+          "type": "number",
+          "description": "Delay before playing the first tile."
+        },
+        "rand_min": {
+          "type": "number",
+          "description": "Minimum random delay in seconds."
+        },
+        "rand_max": {
+          "type": "number",
+          "description": "Maximum random delay in seconds."
+        },
+        "candidate": {
+          "type": "number",
+          "description": "Delay in seconds for chi pon kan candidate selection."
+        }
+      },
+      "required": ["first_tile", "rand_min", "rand_max", "candidate"],
+      "additionalProperties": false
+    },
+    "recommendation_temperature": {
+      "type": "number",
+      "description": "Temperature setting for recommendation softmax scaling."
     }
   },
-  "required": ["mitm", "model", "theme", "ot_server", "autoplay", "auto_switch_model"],
+  "required": ["mitm", "model", "theme", "ot_server", "autoplay", "auto_switch_model", "recommendation_temperature"],
   "description": "Settings for the application.",
   "additionalProperties": false
 }

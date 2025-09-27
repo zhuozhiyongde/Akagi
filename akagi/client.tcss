@@ -3,7 +3,7 @@
     height: 1fr;    
 }
 
-#recommandation {
+#recommendation {
     width: 3fr;
     height: 1fr;
     border: round $accent;
@@ -99,13 +99,13 @@ Consume {
     align: center top;
 }
 
-Recommandation {
+Recommendation {
     width: 1fr;
     height: 1fr;
     align: center middle;
 }
 
-#recommandation_button {
+#recommendation_button {
     width: 1fr;
     height: 5;
 }
@@ -328,7 +328,7 @@ Button.Nukidora.-active {
     border-top: tall $nukidora-darken-3;
 }
 
-#recommandation_score {
+#recommendation_score {
     width: 13;
     height: 3;
     margin: 1 0;

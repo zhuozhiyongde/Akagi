@@ -1,4 +1,5 @@
 import numpy as np
+from settings.settings import settings
 
 def meta_to_recommend(meta: dict, is_3p=False) -> dict:
     # """
@@ -84,7 +85,7 @@ def meta_to_recommend(meta: dict, is_3p=False) -> dict:
         return softmax_arr
 
     def scale_list(list):
-        scaled_list = softmax(list)
+        scaled_list = softmax(list, temperature=settings.recommendation_temperature)
         return scaled_list
     q_values = meta['q_values']
     mask_bits = meta['mask_bits']
