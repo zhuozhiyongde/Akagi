@@ -231,7 +231,7 @@ Make sure you have set the display of the game client to 16:9 aspect ratio.
 ![image](./docs/gifs/change_theme.gif)
 
 #### Call Reach
-The recommandation window does not show which tile to discard for riichi?
+The recommendation window does not show which tile to discard for riichi?
 You have to click on the "Reach" button to show the call reach recommendation.
 ![image](./docs/gifs/call_reach.gif)
 
