@@ -86,6 +86,10 @@
       "additionalProperties": false
     }
   },
+  "recommendation_temperature": {
+    "type": "number",
+    "description": "Temperature setting for recommendation softmax scaling."
+  },
   "required": ["mitm", "model", "theme", "ot_server", "autoplay", "auto_switch_model"],
   "description": "Settings for the application.",
   "additionalProperties": false
