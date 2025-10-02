@@ -129,37 +129,39 @@ class SettingsScreen(Screen):
                 return vertical_container
             case "string":
                 if "enum" in schema:
+                    select_from_values = Select.from_values(schema["enum"], value=settings, id=f"{previous_names}{name}", classes="settings__select")
+                    select_from_values.with_tooltip(schema.get("description", None))
                     return Horizontal(
                         Label(f"{name}: ", classes="settings__key"),
-                        Select.from_values(schema["enum"], value=settings, id=f"{previous_names}{name}", classes="settings__select"),
+                        select_from_values,
                         classes="settings__row",
                         id=f"{previous_names}{name}",
                     )
                 else:
                     return Horizontal(
                         Label(f"{name}: ", classes="settings__key"),
-                        Input(value=settings, id=f"{previous_names}{name}", type="text", classes="settings__input"),
+                        Input(value=settings, id=f"{previous_names}{name}", type="text", classes="settings__input", tooltip=schema.get("description", None)),
                         classes="settings__row",
                         id=f"{previous_names}{name}",
                     )
             case "number":
                 return Horizontal(
                     Label(f"{name}: ", classes="settings__key"),
-                    Input(value=str(settings), id=f"{previous_names}{name}", type="number", classes="settings__input"),
+                    Input(value=str(settings), id=f"{previous_names}{name}", type="number", classes="settings__input", tooltip=schema.get("description", None)),
                     classes="settings__row",
                     id=f"{previous_names}{name}",
                 )
             case "integer":
                 return Horizontal(
                     Label(f"{name}: ", classes="settings__key"),
-                    Input(value=str(settings), id=f"{previous_names}{name}", type="integer", classes="settings__input"),
+                    Input(value=str(settings), id=f"{previous_names}{name}", type="integer", classes="settings__input", tooltip=schema.get("description", None)),
                     classes="settings__row",
                     id=f"{previous_names}{name}",
                 )
             case "boolean":
                 return Horizontal(
                     Label(f"{name}: ", classes="settings__key"),
-                    Switch(value=settings, id=f"{previous_names}{name}", classes="settings__switch"),
+                    Switch(value=settings, id=f"{previous_names}{name}", classes="settings__switch", tooltip=schema.get("description", None)),
                     classes="settings__row",
                     id=f"{previous_names}{name}",
                 )
