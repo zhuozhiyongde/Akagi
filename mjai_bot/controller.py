@@ -13,6 +13,7 @@ class Controller(object):
         self.bot: Bot | None = None
         self.list_available_bots()
         self.bot: Bot = self.available_bots[0]() if self.available_bots else None
+        self.choose_bot_name(settings.model)
         self.temp_mjai_msg: list[dict] = []
         self.starting_game: bool = False
 
