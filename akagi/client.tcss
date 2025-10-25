@@ -398,6 +398,18 @@ ModelsScreen {
     margin: 1;
 }
 
+#autoplay_thinker_label {
+    width: 1fr;
+    align: center middle;
+    text-align: center;
+    text-style: bold;
+}
+
+#models_thinker_select {
+    width: 1fr;
+    margin: 1;
+}
+
 #models_select_button {
     width: 1fr;
     height: 5;

@@ -83,3 +83,24 @@ class AutoPlay(object):
             bool: True if the action was performed, False otherwise.
         """
         pass
+
+    def react(self, input: dict = None, input_list: list[dict] = None):
+        """
+        React to the game state update.
+
+        This method processes the input events, updates the internal game state,
+        and calculates a delay to simulate human-like reaction time.
+        """
+        pass
+
+    def get_available_thinkers_names(self) -> list[str]:
+        return []
+
+    def choose_thinker_name(self, thinker_name: str) -> bool:
+        return False
+
+    def get_last_mjai_delay(self) -> float:
+        """
+        Returns the last computed MJAI delay in seconds.
+        """
+        return 0.0

@@ -226,6 +226,10 @@ class SettingsScreen(Screen):
         logger.info(f"Verifying settings: {local_settings}")
         try:
             jsonschema.validate(local_settings, get_schema())
+            if not any(thinker.name == local_settings["autoplay_thinker"] for thinker in autoplay.available_thinkers):
+                logger.warning(f"Autoplay thinker '{local_settings['autoplay_thinker']}' is not available")
+                raise ValueError(f"Autoplay thinker '{local_settings['autoplay_thinker']}' is not available\n"
+                                 f"Please check the {local_settings['autoplay_thinker']}.py file in the autoplay/delay directory.")
             logger.info("Settings are valid, saving...")
             save_settings(local_settings)
             logger.info("Settings saved")
@@ -234,6 +238,7 @@ class SettingsScreen(Screen):
                 mitm_client.running
             )
             update_model = local_settings["model"] != settings.model
+            update_thinker = local_settings["autoplay_thinker"] != settings.autoplay_thinker
             # Reload settings
             settings.update(get_settings())
             self.app.notify(
@@ -252,6 +257,9 @@ class SettingsScreen(Screen):
                         title="Model Error",
                         severity="error",
                     )
+            if update_thinker:
+                autoplay.thinker = next(thinker.thinker() for thinker in autoplay.available_thinkers if thinker.name == settings.autoplay_thinker)
+                logger.info(f"Selected thinker: {settings.autoplay_thinker}")
             if notify_restart_mitm:
                 self.app.notify(
                     "MITM settings changed, you need to restart MITM client for the changes to take effect.",
@@ -315,6 +323,7 @@ class ModelsScreen(Screen):
         global mjai_controller, autoplay, settings
         self.windows = autoplay.get_windows()
         windows_names = [window.name for window in self.windows]
+        thinker_names = autoplay.get_available_thinkers_names()
         yield ScrollableContainer(
             Static("Models", id="models_label"),
             Select.from_values(mjai_controller.available_bots_names, id="models_select"),
@@ -322,6 +331,8 @@ class ModelsScreen(Screen):
             Static("Warning: To play 3P Mahjong, a 3P model is needed.", id="models_warning2"),
             Static("Autoplay Window", id="autoplay_window_label"),
             Select.from_values(windows_names, id="models_window_select"),
+            Static("Thinker", id="autoplay_thinker_label"),
+            Select.from_values(thinker_names, id="models_thinker_select"),
             Button("Select", variant="primary", id="models_select_button"),
             id="models_select_container",
         )
@@ -349,6 +360,12 @@ class ModelsScreen(Screen):
                 if window.name == selected_window_name:
                     autoplay.select_window(window.hwnd)
                     break
+
+        selected_thinker: Select = self.query_one("#models_thinker_select")
+        selected_thinker_name = selected_thinker.value
+        if selected_thinker_name != Select.BLANK:
+            autoplay.choose_thinker_name(selected_thinker_name)
+            logger.info(f"Selected thinker: {selected_thinker_name}")
 
         self.app.pop_screen()
 
@@ -1049,6 +1066,7 @@ class AkagiApp(App):
                 mjai_response = mjai_controller.react(mjai_msgs)
                 logger.debug(f"<- {mjai_response}")
                 mjai_bot.react(input_list=mjai_msgs)
+                autoplay.react(input_list=mjai_msgs)
                 mjai_out_log: RichLog = self.query_one("#mjai_out_log")
                 if (
                     ((mjai_response["type"] != "none" or mjai_bot.can_act   ) and (not mjai_bot.is_3p)) or
@@ -1074,7 +1092,9 @@ class AkagiApp(App):
                     ((mjai_response["type"] != "none" or mjai_bot.can_act_3p) and (    mjai_bot.is_3p))
                 ):
                     if settings.autoplay:
-                        self.set_timer(0.1, partial(self.autoplay, mjai_response))
+                        delay = autoplay.get_last_mjai_delay()
+                        logger.debug(f"Autoplaying in {delay} seconds")
+                        self.set_timer(delay, partial(self.autoplay, mjai_response))
         except Exception as e:
             logger.error(f"Error in main loop: {traceback.format_exc()}")
 
@@ -1104,7 +1124,7 @@ class AkagiApp(App):
         global autoplay, mitm_client, mjai_controller
         if settings.mitm.type.value in ["tenhou", "unified"]:
             # Riichi City, Tenhou do not support autoplay
-            logger.warning("Autoplay is not supported for this MJAI type")
+            logger.warning("Autoplay does not support this MJAI type")
             return
 
         if (not autoplay.check_window()):
