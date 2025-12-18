@@ -1,6 +1,8 @@
 from .logger import logger
 from settings.settings import settings, MITMType
     
+AUTOPLAY_PRIVATE = False
+
 class AutoPlay(object):
     def __init__(self):
         pass

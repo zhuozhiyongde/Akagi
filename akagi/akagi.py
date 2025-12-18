@@ -38,7 +38,7 @@ from .libriichi_helper import meta_to_recommend
 from mitm.client import Client
 from mjai_bot.bot import AkagiBot
 from mjai_bot.controller import Controller
-from autoplay.autoplay import AutoPlay
+from autoplay.autoplay import AutoPlay, AUTOPLAY_PRIVATE
 from settings import MITMType, Settings, load_settings, get_settings, get_schema, verify_settings, save_settings
 from settings.settings import settings
 
@@ -226,10 +226,11 @@ class SettingsScreen(Screen):
         logger.info(f"Verifying settings: {local_settings}")
         try:
             jsonschema.validate(local_settings, get_schema())
-            if not any(thinker.name == local_settings["autoplay_thinker"] for thinker in autoplay.available_thinkers):
-                logger.warning(f"Autoplay thinker '{local_settings['autoplay_thinker']}' is not available")
-                raise ValueError(f"Autoplay thinker '{local_settings['autoplay_thinker']}' is not available\n"
-                                 f"Please check the {local_settings['autoplay_thinker']}.py file in the autoplay/delay directory.")
+            if AUTOPLAY_PRIVATE:
+                if not any(thinker.name == local_settings["autoplay_thinker"] for thinker in autoplay.available_thinkers):
+                    logger.warning(f"Autoplay thinker '{local_settings['autoplay_thinker']}' is not available")
+                    raise ValueError(f"Autoplay thinker '{local_settings['autoplay_thinker']}' is not available\n"
+                                    f"Please check the {local_settings['autoplay_thinker']}.py file in the autoplay/delay directory.")
             logger.info("Settings are valid, saving...")
             save_settings(local_settings)
             logger.info("Settings saved")
@@ -257,8 +258,8 @@ class SettingsScreen(Screen):
                         title="Model Error",
                         severity="error",
                     )
-            if update_thinker:
-                autoplay.thinker = next(thinker.thinker() for thinker in autoplay.available_thinkers if thinker.name == settings.autoplay_thinker)
+            if update_thinker and AUTOPLAY_PRIVATE:
+                autoplay.thinker = next(thinker.thinker() for thinker in autoplay.get_available_thinkers() if thinker.name == settings.autoplay_thinker)
                 logger.info(f"Selected thinker: {settings.autoplay_thinker}")
             if notify_restart_mitm:
                 self.app.notify(
