@@ -1356,6 +1356,8 @@ def run_headless() -> None:
             time.sleep(1 / 20)
     except KeyboardInterrupt:
         logger.info("Stopping Akagi...")
+    except Exception:
+        logger.error(f"Headless crashed: {traceback.format_exc()}")
     finally:
         if mitm_client and mitm_client.running:
             mitm_client.stop()
@@ -1390,6 +1392,8 @@ def main():
         app.run()
     except KeyboardInterrupt:
         logger.info("Stopping Akagi...")
+    except Exception:
+        logger.error(f"App crashed: {traceback.format_exc()}")
     finally:
         mitm_client.stop()
         stop_dataserver()
