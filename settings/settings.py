@@ -224,7 +224,7 @@ def load_settings() -> Settings:
         logger.info(f"Updated {FILE_PATH / 'settings.json'} with missing default values")
 
     # Parse settings
-    return Settings(
+    settings_obj = Settings(
         mitm=MITMConfig(
             host=settings["mitm"]["host"],
             port=settings["mitm"]["port"],
@@ -244,6 +244,8 @@ def load_settings() -> Settings:
         autoplay_thinker=settings["autoplay_thinker"],
         recommendation_temperature=settings["recommendation_temperature"]
     )
+    settings_obj.save_ot_settings()
+    return settings_obj
 
 def get_schema() -> dict:
     """
